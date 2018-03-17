@@ -15,3 +15,5 @@ def main():
     user = {'username': 'Miguel'}
     return render_template( 'index.html' 
         , user=user )
+
+    
