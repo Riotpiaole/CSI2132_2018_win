@@ -78,11 +78,7 @@ def connect( user = user , passwd  = password  ,
     '''
     db_connect_str = "postgresql+psycopg2://{}:{}@{}:{}/{}".format( 
         user, passwd , host , port , database)
-    db_instance = create_engine( db_connect_str )
-    if migrate:
-        Base.metadata.create_all( db_instance )     
-    sess = sessionmaker( bind = db_instance  ).__call__()
-    return sess 
+    return db_connect_str
 
 def init_db( num_data = 300 , insert_threshhold = 100 ):
     sess = connect(migrate=True) # session to the current database
@@ -136,6 +132,4 @@ def init_db( num_data = 300 , insert_threshhold = 100 ):
                 round( (end_t -  start_t) , 2) ) )
 
 
-if __name__ == "__main__":
-    print ( "Hello World ")
      
