@@ -157,12 +157,48 @@ class Restaurant(db.Model,object):
         self.name=name
         self.review_count=review_count
         self.is_open=is_open
-    
-class RestaurantSchmea( ma.Schema ):
+
+class RestaurantSchema( ma.Schema ):
     class Meta:
         fields = ( 'business_id' , 'name' )
 
-# Formating the right models 
-restaurants_schema = RestaurantSchmea( many=True )
+class LocationSchema(ma.Schema):
+    class Meta:
+        fields = ('address', 'city')
 
+class MenuItemSchema(ma.Schema):
+    class Meta:
+        fields = ('item_id', 'name')
+
+class RaterSchema(ma.Schema):
+    class Meta:
+        fields = ('user_id','name')
+
+class RatingSchema(ma.Schema):
+    class Meta:
+        fields = ('user_id ', 'date ')
+
+class RatingItemSchema(ma.Schema):
+    class Meta:
+        fields = ('item_id','date')
+
+
+# Formating the right models 
+restaurants_schema = RestaurantSchema( many=True )
+restaurant_schema = RestaurantSchema()
+
+locations_schema = LocationSchema(many = True)
+location_schema = LocationSchema()
+
+menuitems_schema = MenuItemSchema(many = True)
+menuitem_schema = MenuItemSchema()
+
+raters_schema = RaterSchema(many = True)
+rater_schema = RaterSchema()
+
+ratings_schema = RatingSchema(many = True)
+rating_schema = RatingSchema()
+
+ratingitems_schema = RatingItemSchema(many = True)
+ratingitem_schema = RatingItemSchema()
 

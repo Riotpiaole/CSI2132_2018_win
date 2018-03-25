@@ -18,7 +18,7 @@ except ModuleNotFoundError :
     sys.exit( -1 )
 
 # Importing model 
-from model import Restaurant , Rater , Location , Base , Rating
+from model import Restaurant , Rater , Location ,  Rating
 
 def parse_restaurant( bucket , line ):
     item = json.loads( line )
