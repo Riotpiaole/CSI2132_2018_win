@@ -3,7 +3,6 @@ from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
 import os 
-from model import *
 
 template_dir = os.path.abspath( "../template/" )
 static_dir = os.path.abspath( "../static/" )
@@ -13,8 +12,7 @@ app = Flask( "Server" , template_folder = template_dir , static_folder = static_
 app.config.from_pyfile ( 'config.py' )
 db = SQLAlchemy( app ) # database object
 
-
-
+from model import * 
 # Adding routes over here 
 
 ############################ SHOW BLABLA IN JSON ################ 
@@ -175,26 +173,6 @@ def deleteMenuItem(business_id, item_id):
 #############  Rating #########
 
 #############  Rating Item #########
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

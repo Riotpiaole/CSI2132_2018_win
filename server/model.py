@@ -2,6 +2,7 @@ from app import db , app
 from sqlalchemy.types import ARRAY as Array
 from flask import Flask, jsonify, abort, request
 from flask_marshmallow import Marshmallow
+from base64 import encodestring 
 
 ma = Marshmallow( app )
 
@@ -38,12 +39,8 @@ class Location(db.Model):
     
 class MenuItem(db.Model):
     __tablename__='menuitem'
-
-    item_id  = db.Column(db.String (22), primary_key=True)
+    item_id  = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String) 
-
-    # food or beverage 
-    item_type = db.Column(db.String)
 
     # starter, main, desert 
     category = db.Column(db.String)
@@ -55,8 +52,19 @@ class MenuItem(db.Model):
 
     # M menu item  has N ratings
     ratings = db.relationship('Rating') 
-
-
+    def __init__ ( self      , name     , 
+                   item_type , category , 
+                   description ,  price , 
+                   business_id ): 
+        self.item_id = encodestring( name )
+        self.name = name 
+        self.category = category 
+        self.description = description 
+        self.price = price 
+        has_rest = sess.query( Restaurant ).filter(
+             Restaurant.business_id == business_id ).first()[0]
+        if has_rest : self.business_id = business_id
+                
 class Rater(db.Model):
     __tablename__='rater'
 
@@ -87,42 +95,33 @@ class Rater(db.Model):
         self.join_date = join_date
         self.reputation = reputation
 
-
 class Rating(db.Model):
     __tablename__='rating'
 
     #mapper
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String (22), db.ForeignKey('rater.user_id'))
     business_id  = db.Column(db.String (22), db.ForeignKey('restaurant.business_id'))
-    item_id = db.Column(db.String (22), db.ForeignKey('menuitem.item_id'))
-    
-    date = db.Column(db.DateTime, primary_key=True)
+    date = db.Column(db.DateTime)
+    menu_id = db.Column( db.Integer , db.ForeignKey( 'menuitem.item_id'))
     
     # price, food, mood, staff attributes may 
     # take a value between 1(low) to 5(high)
     price = db.Column(db.Integer)
-    food = db.Column(db.Integer)
     mood = db.Column(db.Integer)
-    staff= db.Column(db.Integer)
-
-
     comments =db.Column(db.String)
 
-    def __init__(self, user_id, business_id, date, comments ):
+    def __init__(self, user_id, business_id, date, comments , price  ,mood , menu_id):
         self.user_id = user_id
         self.business_id = business_id
         self.date = date
         self.comments = comments
+        self.price = price 
+        self.menu_id = menu_id
+        self.mood = mood 
 
-class RatingItem(db.Model):
-    __tablename__='ratingitem'
 
-    user_id  = db.Column(db.String (22), primary_key=True)
-    date = db.Column(db.DateTime, primary_key=True)
-    item_id   = db.Column(db.String (22), primary_key=True)
-    rating = db.Column(db.Integer)
-    comment = db.Column(db.String)
-
+    
 
 class Restaurant(db.Model,object):
     __tablename__='restaurant'
@@ -139,7 +138,7 @@ class Restaurant(db.Model,object):
     # type  attribute contains details about the cuisine, 
     # such as Italian, Indian, Middle Eastern, and so on.
     food_type = db.Column( Array( db.String))
-    hours = db.Column( Array( db.String( 7))) # [ "Mon", "Tue" ... ]
+    hours = db.Column( Array( db.String( 20 ))) # [ "Mon", "Tue" ... ]
 
     URL = db.Column(db.String)
 
@@ -152,11 +151,17 @@ class Restaurant(db.Model,object):
     # 1 restaurant serves M menu items
     items = db.relationship('MenuItem')
 
-    def __init__(self,b_id,name,review_count,is_open):
+    def __init__(self  , b_id,
+                name   , review_count,
+                is_open, stars, 
+                hours  , food_type = None ):
         self.business_id=b_id
         self.name=name
+        self.stars = stars
         self.review_count=review_count
         self.is_open=is_open
+        self.hours = [ hour for  day , hour in hours.items()  ]
+        if food_type: self.food_type = food_type 
 
 class RestaurantSchema( ma.Schema ):
     class Meta:
