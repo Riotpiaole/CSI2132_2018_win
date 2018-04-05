@@ -161,11 +161,16 @@ main{
   box-sizing: border-box;
 }
 
-.searchbar{
+.searchbar  {
   position: absolute;
-  width: 100%;
+  display: flex;  
+  width: 50%;
   top: 50%;
-  left: 25%;;
+  left: 25%;
+}
+
+.search{
+  width: 30%;
 }
 
 /* Style the search field */
@@ -174,15 +179,16 @@ form.search input[type=text] {
   font-size: 17px;
   border: 1px solid grey;
   float: left;
-  width: 40%;
+  width: 70%;
   background: #f1f1f1;
   position: absolute;
+  margin: 0%;
 }
 
 /* Style the submit button */
 form.search button {
   float: left;
-  width: 10%;
+  width: 100%;
   padding: 10px;
   background: #2196F3;
   color: white;
@@ -190,11 +196,10 @@ form.search button {
   border: 1px solid grey;
   border-left: none; /* Prevent double borders */
   cursor: pointer;
+  margin:0px;  
 }
 
-form.search button:hover {
-  background: #0b7dda;
-}
+
 
 /* Clear floats */
 form.search::after {
@@ -208,9 +213,13 @@ form.search::after {
 
 .registration{
   position: absolute;
-  top: 20%;
-  left: 10%;
+  top: 25%;
+  left: 25%;
+  display: flex;
+  padding:16px;
+  width: 50%;
 }
+
 
 * {box-sizing: border-box}
 
@@ -229,14 +238,10 @@ input[type=text]:focus, input[type=password]:focus {
   outline: none;
 }
 
-hr {
-  border: 1px solid #f1f1f1;
-  margin-bottom: 25px;
-}
 
 /* Set a style for all buttons */
 button {
-  background-color: #4CAF50;
+  background-color: #2196F3;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -263,9 +268,7 @@ button:hover {
 }
 
 /* Add padding to container elements */
-.container {
-  padding: 16px;
-}
+
 
 /* Clear floats */
 .clearfix::after {
@@ -275,7 +278,7 @@ button:hover {
 }
 
 /* Change styles for cancel button and signup button on extra small screens */
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 876px) {
   .cancelbtn, .signupbtn {
     width: 100%;
   }
