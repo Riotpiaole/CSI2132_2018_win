@@ -1,0 +1,282 @@
+*{
+    margin:0;
+    padding: 0;
+}
+body{
+    margin: 0;
+    font-size:1.2em;
+    line-height: 1.6;
+}
+
+#landing{
+    background-image:url('../img/landing.jpeg');
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#mainbox{
+  background: rgba(211, 211, 211, 0.54);
+  padding: 30px;
+  border-radius: 60px;
+}
+
+#mainbox p, h1{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.button{
+    font-size: 18px;
+    color:black;
+    text-decoration: none;
+    border: black 1px solid;
+    padding: 10px 20px;
+    border-radius: 100px;
+}
+
+.button:hover{
+    background-color: black;
+    color: white;
+}
+
+#landing p {
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.navbar{
+    margin-bottom: 0;
+    background-color: #122F4B;
+}
+
+main{
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 5%;
+  
+}
+  .parallax-body, .parallax{
+    height:100%;
+    margin:0;
+    font-size:16px;
+    font-family:"Lato", sans-serif;
+    font-weight:400;
+    line-height:1.8em;
+    color:#666;
+}
+  
+  .parallax-img{
+    position:relative;
+    opacity:0.70;
+    background-position:center;
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+  .parallax-landing{
+    min-height:100%;
+}
+
+  .parallax-section{
+      min-height:400px;
+}
+
+  .section{
+    text-align:center;
+    padding:50px 80px;
+}
+  
+
+  
+  .ptext{
+    background-color:rgba(18, 47, 75, 0.8);
+    position:absolute;
+    top:15%;
+    width:30%;
+    text-align:center;
+    color:#fff;
+    font-size:27px;
+    letter-spacing:8px;
+    text-transform:uppercase;
+    padding: 0px 20px;
+    margin-left: 35%;
+}
+  
+  .ptext .border{
+    line-height: 200%;
+}
+    
+
+  
+@media(max-width:778px){
+      .parallax-img{
+        background-attachment:scroll;
+  }
+
+  #buttons{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+  }
+
+  .button{
+        margin: 3%;
+        padding: 5%;
+        font-size: 35px;
+  }
+      
+  body{
+        line-height: 1;
+      }
+
+  .section{
+      padding: 50px 20px;
+    }
+    #mainbox{
+      padding: 10px;
+    }
+    .ptext{
+      top: 40%;
+    }
+}
+  
+@media(max-width: 876px){
+  .navbar-header a{
+    display: none;
+  }
+}
+
+
+/* CSS for the search bar*/
+* {
+  box-sizing: border-box;
+}
+
+.searchbar{
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 25%;;
+}
+
+/* Style the search field */
+form.search input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 40%;
+  background: #f1f1f1;
+  position: absolute;
+}
+
+/* Style the submit button */
+form.search button {
+  float: left;
+  width: 10%;
+  padding: 10px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none; /* Prevent double borders */
+  cursor: pointer;
+}
+
+form.search button:hover {
+  background: #0b7dda;
+}
+
+/* Clear floats */
+form.search::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+
+/* registration form*/
+
+.registration{
+  position: absolute;
+  top: 20%;
+  left: 10%;
+}
+
+* {box-sizing: border-box}
+
+/* Full-width input fields */
+  input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity:1;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  padding: 14px 20px;
+  background-color: #f44336;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.cancelbtn, .signupbtn {
+  float: left;
+  width: 50%;
+}
+
+/* Add padding to container elements */
+.container {
+  padding: 16px;
+}
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 300px) {
+  .cancelbtn, .signupbtn {
+    width: 100%;
+  }
+}
