@@ -25,13 +25,18 @@
 		<a href = "{{url_for('newMenuItem', business_id = business_id )}}">Create New Item</a>
 	</br></br>
 
+	<h2>MOST Expensive</h2>
+		<p>{{exp.name}}</p>
+		<p>Priced {{exp.price}} CAD</p>
+	<br/>
 	<h2>Appetizers</h2>
 
 		{% for i in items %}
 		{% if i.category == 'Appetizers' %}
 
 		<p>{{i.name}}</p>
-	
+		<P>Average</P>
+		<p>{{avg['Appetizers']}} CAD</p>
 
 		<p>{{i.description}}</p>
 	
@@ -57,7 +62,8 @@
 		{% if i.category == 'Entrees' %}
 
 		<p>{{i.name}}</p>
-	
+		<P>Average</P>
+		<p>{{avg['Entrees']}} CAD</p>
 
 		<p>{{i.description}}</p>
 	
@@ -83,7 +89,8 @@
 		{% if i.category == 'Desserts' %}
 
 		<p>{{i.name}}</p>
-	
+		<P>Average</P>
+		<p>{{avg['Desserts']}} CAD</p>
 
 		<p>{{i.description}}</p>
 	
@@ -109,7 +116,8 @@
 		{% if i.category == 'Beverages' %}
 
 		<p>{{i.name}}</p>
-	
+		<P>Average</P>
+		<p>{{avg['Beverages']}} CAD</p>
 
 		<p>{{i.description}}</p>
 	

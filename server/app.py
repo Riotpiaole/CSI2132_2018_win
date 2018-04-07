@@ -2,6 +2,9 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for
 from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import func 
+from sqlalchemy import desc
+
 import os 
 from model import *
 
@@ -10,6 +13,7 @@ import random
 import string
 def random_generator( size=10 ,chars = string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size) )
+
 
 template_dir = os.path.abspath( "../template/" )
 static_dir = os.path.abspath( "../static/" )
@@ -64,8 +68,24 @@ def showRestaurants():
     for rest in restaurants:
         rest.location= Location.query.filter(
             Location.business_id == rest.business_id).first()
-        
-    return render_template('restaurants.html', restaurants = restaurants)
+    cates = db.session.query(Restaurant.food_type.distinct().label("food_type"))
+    all_cate = [ row.food_type for row in cates.all()]
+    os.system("clear")
+    filters = list ( set([ y for x in all_cate for y in x ] ))
+    random.shuffle( filters )
+    return render_template('restaurants.html', restaurants = restaurants ,
+                                               categories=filters[:10],
+                                               cated=True)
+
+@app.route('/restaurant/<catergories>')
+def cateRestaurants(catergories):
+    restaurant_ = Restaurant.query.filter(
+        Restaurant.food_type.any(catergories)).all()
+    
+    # cated as false for skipping the category display
+    return render_template('restaurants.html' , restaurants = restaurant_ , 
+                                                catergories=catergories ,
+                                                cated = False )
 
 # create a new restaurant
 @app.route('/restaurant/new/', methods=['GET','POST'])
@@ -127,8 +147,23 @@ def showMenu(business_id):
     restaurant = Restaurant.query.filter( Restaurant.business_id == business_id ).first()
     items = db.session.query(MenuItem).filter_by(
         business_id=business_id).limit(8)
+    all_cate_avg =dict(db.session.query(
+        MenuItem.category,func.avg(MenuItem.price)).group_by( MenuItem.category ).all())
+    for key ,value in  all_cate_avg.items():
+        all_cate_avg[key] = format( float( value ) , '.2f')
     
-    return render_template('showMenu.html', items=items, business_id=business_id,restaurant=restaurant, location=location)
+    most_expensive = db.session.query(MenuItem).order_by(
+        desc(MenuItem.price)
+    ).limit(1).first()
+    
+    
+    
+    return render_template('showMenu.html', items=items, 
+                                            business_id=business_id,
+                                            restaurant=restaurant, 
+                                            location=location,
+                                            avg = all_cate_avg ,
+                                            exp=most_expensive)
 
 # Create a new menu item
 @app.route(
@@ -144,7 +179,6 @@ def newMenuItem(business_id):
     else:
         return render_template('newmenuitem.html', business_id=business_id)
 
-    return render_template('newMenuItem.html', restaurant=restaurant)
 
 # Update a menu item
 @app.route('/restaurant/<string:business_id>/menu/<string:item_id>/edit',
@@ -172,7 +206,7 @@ def editMenuItem(business_id, item_id):
 @app.route('/restaurant/<string:business_id>/menu/<string:item_id>/delete',
            methods=['GET', 'POST'])
 def deleteMenuItem(business_id, item_id):
-    itemToDelete = db.session.query(MenuItem).filter_by(id=menu_id).one()
+    itemToDelete = db.session.query(MenuItem).filter_by(id=item_id).one()
     if request.method == 'POST':
         db.session.delete(itemToDelete)
         db.session.commit()

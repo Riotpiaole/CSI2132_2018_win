@@ -62,7 +62,7 @@ class MenuItem(db.Model):
     # starter, main, desert 
     category = db.Column(db.String) 
     description  = db.Column(db.String)
-    price  = db.Column(db.String)
+    price  = db.Column(db.Integer)
 
     # restaurant id is a foreign key
     business_id  = db.Column(db.String (22), db.ForeignKey('restaurant.business_id'))
@@ -203,7 +203,6 @@ class LocationSchema(ma.Schema):
     address = fields.String()
     city = fields.String()
     post_code = fields.String()
-
 
 class RestaurantSchema( ma.Schema ):
     business_id = fields.String()
