@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <div class="pane">
+            <h1>Raters and their ratings</h1>
+            <h2>{{rater.name}} give the highest overall rating</h2>
+            <ul>
+                <li> Join Date: {{rater.join_date}} </li>
+                <li> Reputation: {{rater.reputation}} </li>
+                <li> Restaurants: {{restaurant.name}} </li>
+                <li> Rating date: {{rating.date}} </li>
+            </ul>
+
+            <h2>{{rater.name}} rated the restaurant DAVIDsTEA</h2>
+            <ul>
+                <li>Reputation: {{rater.reputation}}</li>
+                <li> Comments:{{rating.comments}}</li>
+                <li> Menu items: {{item.name}}</li>
+                <li> Price: {{item.price}} </li>
+            </ul>
+
+        </div>
+    </body>
+</html>      
+                

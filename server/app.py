@@ -180,12 +180,21 @@ def deleteMenuItem(business_id, item_id):
     else:
         return render_template('deleteMenuItem.html', item=itemToDelete)
 
-#############  Rater #########
+#############  Raters #########
+# show some raters in one page
+@app.route('/')
+@app.route('/raters/')
+def showRaters():
+    raters = db.session.query(Rater.user_id, Rating.business_id).join(Rating.user_id).group_by(Rating.business_id).all()
+    print(raters)
+        
+    return render_template('raters.html', raters = raters)
+    
+    
+    
 
 
-
-
-#############  Rating #########
+#############  Ratings #########
 
 #############  Rating Item #########
 
