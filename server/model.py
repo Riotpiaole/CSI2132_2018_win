@@ -2,13 +2,21 @@ from app import db , app
 from sqlalchemy.types import ARRAY as Array
 from flask import Flask, jsonify, abort, request
 from flask_marshmallow import Marshmallow
+from flask_marshmallow.sqla import HyperlinkRelated
+from flask_marshmallow import fields 
 from base64 import encodestring 
+from marshmallow import Schema, fields, pprint
 
 ma = Marshmallow( app )
 
+import random  
+import string
+def random_generator( size=10 ,chars = string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for x in range(size) )
+
+
 class Location(db.Model):
     __tablename__='location'
-    neighborhood    = db.Column(db.String)
     address         = db.Column(db.String)
     city            = db.Column(db.String)
     state           = db.Column(db.String)
@@ -25,18 +33,27 @@ class Location(db.Model):
 
     # restaurant id is a foreign key
     business_id  = db.Column(db.String (22), db.ForeignKey('restaurant.business_id'))
-
-    def __init__(self, neighborhood, address, city, state, postal_code, latitude, longtitude, business_id):
-        
-        self.neighborhood = neighborhood
+    business = db.relationship('Restaurant',backref='Restaurant')
+    def __init__(self ,address, city , post_code , phone_number , business_id ,
+        lat = None , lon=None):
         self.address = address
         self.city = city
-        self.state = state
-        self.postal_code = postal_code
-        self.latitude = latitude
-        self.longtitude = longtitude
-        self.business_id = business_id
-    
+        self.post_code =post_code
+        self.phone_number =phone_number
+        self.business_id =business_id
+        if lat : self.latitude = lat
+        if lon : self.longtitude = lon
+
+    def update ( self , args ): 
+        for key , value in args.items():
+            if key == 'address' : self.name=value
+            if key == 'city': self.city = value 
+            if key == 'state' : self.state = value 
+            if key == 'post_code': self.postcode = value
+            if key == 'phone_number': self.phone_number = int(value)
+            if key == 'hour_open': self.hour_open.append( value )
+            if key == 'hour_close': self.hour_close.append( value )
+            
 class MenuItem(db.Model):
     __tablename__='menuitem'
     item_id  = db.Column(db.Integer, primary_key=True)
@@ -61,16 +78,15 @@ class MenuItem(db.Model):
         self.category = category 
         self.description = description 
         self.price = price 
-        has_rest = sess.query( Restaurant ).filter(
-             Restaurant.business_id == business_id ).first()[0]
-        if has_rest : self.business_id = business_id
+        self.business_id = business_id
+        self.category = item_type
                 
 class Rater(db.Model):
     __tablename__='rater'
 
     #mapper
     user_id = db.Column(db.String (22), primary_key=True)
-    email = db.Column(db.String)
+    email = db.Column(db.String (120) , unique=True )
 
     # an alias such as SuperSizeMe
     name = db.Column(db.String)
@@ -89,11 +105,13 @@ class Rater(db.Model):
     # 1 rater writes N ratings
     ratings = db.relationship('Rating')
 
-    def __init__(self, user_id, name, join_date, reputation):
+    def __init__(self, user_id, name, join_date, reputation , rater_type):
         self.user_id = user_id
         self.name = name
         self.join_date = join_date
         self.reputation = reputation
+        self.rater_type = rater_type  # (blog, online, food critic)
+        self.email = random_generator(size=4)+"@gmail.com"
 
 class Rating(db.Model):
     __tablename__='rating'
@@ -120,9 +138,6 @@ class Rating(db.Model):
         self.menu_id = menu_id
         self.mood = mood 
 
-
-    
-
 class Restaurant(db.Model,object):
     __tablename__='restaurant'
 
@@ -146,7 +161,7 @@ class Restaurant(db.Model,object):
     ratings = db.relationship('Rating')
 
     # 1 restaurant has N locations
-    locations = db.relationship('Location')
+    locations = db.relationship('Location' ,backref='restaurant' , lazy=True)
 
     # 1 restaurant serves M menu items
     items = db.relationship('MenuItem')
@@ -154,22 +169,47 @@ class Restaurant(db.Model,object):
     def __init__(self  , b_id,
                 name   , review_count,
                 is_open, stars, 
-                hours  , food_type = None ):
+                hours  , food_type=None , location=None ) :
+
         self.business_id=b_id
         self.name=name
         self.stars = stars
         self.review_count=review_count
         self.is_open=is_open
-        self.hours = [ hour for  day , hour in hours.items()  ]
+        self.hours = [ hour for day , hour in hours.items()  ]
         if food_type: self.food_type = food_type 
+        if location: self.location = location 
+        self.URL = name.replace(" ","").join(".com")
+
+
+    def update ( self , args ):
+        for key , value in dict(args).items():
+            if key == 'name' : self.name=value
+            if key == 'food_type': self.food_type.append( value )
+            if key == 'rating' : self.ratings = value 
+            if key == 'review_count': self.review_count = value
+            if key == 'location': self.location = Location(value)
+  
+    def open ( self ): 
+        self.open = not self.open
+    
+    def addReview( self ):
+        self.review = self.review+1
+    
+class LocationSchema(ma.Schema):
+    address = fields.String()
+    city = fields.String()
+    post_code = fields.String()
+
 
 class RestaurantSchema( ma.Schema ):
-    class Meta:
-        fields = ( 'business_id' , 'name' )
-
-class LocationSchema(ma.Schema):
-    class Meta:
-        fields = ('address', 'city')
+    business_id = fields.String()
+    name = fields.String()
+    is_open = fields.Integer()
+    food_type = fields.List(fields.String())
+    URL = fields.String() 
+    location = fields.Nested( LocationSchema  )
+    
 
 class MenuItemSchema(ma.Schema):
     class Meta:
@@ -191,6 +231,7 @@ class RatingItemSchema(ma.Schema):
 # Formating the right models 
 restaurants_schema = RestaurantSchema( many=True )
 restaurant_schema = RestaurantSchema()
+
 
 locations_schema = LocationSchema(many = True)
 location_schema = LocationSchema()

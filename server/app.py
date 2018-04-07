@@ -3,6 +3,13 @@ from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
 import os 
+from model import *
+
+# random string generator
+import random  
+import string
+def random_generator( size=10 ,chars = string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for x in range(size) )
 
 template_dir = os.path.abspath( "../template/" )
 static_dir = os.path.abspath( "../static/" )
@@ -11,9 +18,6 @@ app = Flask( "Server" , template_folder = template_dir , static_folder = static_
 # Connecting to the database
 app.config.from_pyfile ( 'config.py' )
 db = SQLAlchemy( app ) # database object
-
-from model import * 
-# Adding routes over here 
 
 ############################ SHOW BLABLA IN JSON ################ 
 
@@ -45,12 +49,6 @@ def ratingsJSON():
     ratings = ratings_schema.dump( ratings )
     return jsonify( ratings.data )
 
-# Show rating items in JSON
-@app.route( "/ratingitems/JSON")
-def ratingitemsJSON():
-    ratingitems = RatingItem.query.limit(10).all()
-    ratingitems = ratingitems_schema.dump( ratingitems )
-    return jsonify( ratingitems.data )
 
 
 ######### Create Read Update Delete ###########################
@@ -62,16 +60,27 @@ def ratingitemsJSON():
 @app.route('/restaurant/')
 def showRestaurants():
     restaurants = db.session.query(Restaurant).limit(5).all()
+    for rest in restaurants:
+        rest.location= Location.query.filter(
+            Location.business_id == rest.business_id).first()
     return render_template('restaurants.html', restaurants = restaurants)
 
 # create a new restaurant
 @app.route('/restaurant/new/', methods=['GET','POST'])
 def newRestaurant():
     if request.method == 'POST':
+        location= Location( address = request.form['address'],
+                            city = request.form['city'],
+                            state = request.form['state'],
+                            postal_code=request.form['post_code'])
         newRestaurant = Restaurant(name=request.form['name'],
-                                    b_id='111',
+                                    b_id=random_generator(),
                                     review_count=0,
-                                    is_open = 0)
+                                    is_open = 0,
+                                    stars=0,
+                                    food_type=request.form['food_type'],
+                                    location=location)
+        db.session.add( location )
         db.session.add(newRestaurant)
         db.session.commit()
         return redirect(url_for('showRestaurants'))
@@ -178,4 +187,3 @@ def deleteMenuItem(business_id, item_id):
 
 if __name__ == "__main__":
     app.run( debug=True )
-    

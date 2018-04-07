@@ -45,14 +45,21 @@ sess = db.session()
 
 gen_int = lambda x : randint ( 0 , x - 1)
 
-def parse_restaurant( bucket , line , restaurant_id = None ,genre_type = None  ):
+def parse_restaurant( bucket , l_bucket, line , restaurant_id = None ,genre_type = None  ):
     item = json.loads( line ) 
-    bucket.append(
-        Restaurant( item['business_id'], item['name']   , item['review_count'],
+    current_location = Location(item['address'],item['city'] ,
+                              item['state']   , item['postal_code'] , 
+                              item['latitude'], item['longitude'] )
+    
+    l_bucket.append( current_location )
+    rest = Restaurant( 
+                    item['business_id'], item['name']   , item['review_count'],
                     item['is_open' ]   , item[ 'stars' ],
-                    item[ 'hours' ]    , food_type= item['categories'] ) )
+                    item[ 'hours' ]    , food_type=item['categories'] , location=current_location )
+    bucket.append( rest )
     
     restaurant_id.append ( item[ 'business_id' ] )
+    
     for genre in item['categories']:
         genre_type.append ( genre ) 
 
@@ -67,7 +74,8 @@ def parse_review( bucket  , line , user_id , rest_id , menu_id):
 def parse_user ( bucket , line , user_id ):
     item = json.loads ( line )
     bucket.append( Rater( item[ 'user_id' ]      ,item[ 'name' ],
-                          item[ 'yelping_since' ],item[ 'average_stars' ]))
+                          item[ 'yelping_since' ],item[ 'average_stars' ] ,
+                          gen_int(3) ))
     user_id.append ( item['user_id']) 
     
 def insert_data ( file_path , insert_threshhold , func , bucket , num_data , *args , insert=False ):
@@ -80,14 +88,6 @@ def insert_data ( file_path , insert_threshhold , func , bucket , num_data , *ar
                 bucket = [] 
                 sess.commit() 
 
-# parsing the location 
-def parse_location ( bucket , line ):
-    item = json.loads( line )
-    bucket.append( Location(  item['neighborhood'], item['address'],
-                              item['city']        , item['state'],
-                              item['postal_code'] , item['latitude'],
-                              item['longitude']   , item['business_id'] ) )  
-
 # read the csv file and insertting the data to the database
 def read_csv_file ( file_folder    = "../dataset/" , 
                     file_name      = None  , 
@@ -97,7 +97,7 @@ def read_csv_file ( file_folder    = "../dataset/" ,
                      "times_appeared" , "last_appeared"  ,
                      "first_appeared" ]
     menu_id =[]   
-    
+    restaurant_id.remove( 'XIeu6wabop6VabOVFNVHIg' )
     if file_name and file_folder:
         file = os.path.join( file_folder , file_name )
         data = pd.read_csv( file )
@@ -108,9 +108,8 @@ def read_csv_file ( file_folder    = "../dataset/" ,
         data[ 'business_id' ] = data.item_id.apply( lambda x : restaurant_id[ gen_int( len ( restaurant_id ) ) ] )
         data[ 'price' ] = data.item_id.apply ( lambda x : gen_int ( 30 ) )
         data[ 'description' ] = data.item_id.apply ( lambda x : gen_int (6 ) )
-        return list(data['item_id '])
         if save :data.to_sql( "menuitem" , db.engine , if_exists='append' , index=False )
-        
+        return list(data['item_id'])
     else: raise ValueError("Invalid directory NONE filename")
     
 
@@ -128,21 +127,22 @@ def init_db( num_data = 300 , insert_threshhold = 100 , inserting=True):
     with open("../dataset/business.json","r", buffering = insert_threshhold ) as businesses :        
         for count , business in enumerate( businesses.readlines() ):
             if count > num_data : break
-            parse_restaurant( bus_bucket , business  ,  
+            parse_restaurant( bus_bucket ,location_bucket, business  ,  
                 restaurant_id= rest_id , 
                 genre_type= category )
-            parse_location ( location_bucket , business )  
-            if len( bus_bucket ) == insert_threshhold : 
-                sess.add_all( bus_bucket )
-                sess.add_all( location_bucket )
-                location_bucket , bus_bucket = [] , [] 
-                sess.commit() 
+            # if len( bus_bucket ) == insert_threshhold : 
+            #     sess.add_all( bus_bucket )
+            #     sess.commit()
+            #     sess.add_all( location_bucket )
+            #     sess.commit()
+            #     location_bucket , bus_bucket = [] , [] 
+                 
         
         category = list (set( category )) # all of category food 
     
     # inserting menu_item 
     print ( "Adding menus........")
-    menu_id = read_csv_file( file_name= "Dish.csv" , category_id= category , restaurant_id= rest_id) 
+    menu_id = read_csv_file( file_name= "Dish.csv" , category_id= category , restaurant_id= rest_id, save=False) 
     
     # inserting user 
     print ( "Adding users ...... ")
