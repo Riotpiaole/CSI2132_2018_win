@@ -172,13 +172,11 @@ def showMenu(business_id):
     '/restaurant/<string:business_id>/menu/new/', methods=['GET', 'POST'])
 def newMenuItem(business_id):
     if request.method == 'POST':
-<<<<<<< HEAD
         newItem = MenuItem(name=request.form['name'], 
             description=request.form['description'], price=request.form['price'], category=request.form['category'], business_id=business_id)
-=======
+
         newItem = MenuItem(name=request.form['name'], description=request.form[
                            'description'], price=request.form['price'], item_type=request.form['category'], business_id=business_id)
->>>>>>> de2afc1f3b54c548afe56428f6dcff484d06a623
         db.session.add(newItem)
         db.session.commit()
 
@@ -222,12 +220,9 @@ def deleteMenuItem(business_id, item_id):
         return render_template('deleteMenuItem.html', item=itemToDelete, business_id=business_id,item_id=itemToDelete.item_id)
 
 #############  Raters #########
-<<<<<<< HEAD
 # show some raters in one page
-=======
 # show answers for the last part in the same page
 @app.route('/')
->>>>>>> de2afc1f3b54c548afe56428f6dcff484d06a623
 @app.route('/raters/')
 def showRaters():
     counts = func.count(Rating.user_id).label("count_rating")
@@ -252,8 +247,7 @@ def showRaters():
                                           restaurant=rater[1],
                                           item=rater[2],
                                           rating=rater[3])
-<<<<<<< HEAD
-=======
+
     
 
 # CRUD for raters
@@ -311,7 +305,7 @@ def deleteRater(user_id):
 
     
 
->>>>>>> de2afc1f3b54c548afe56428f6dcff484d06a623
+
 
 @app.route("/restaurants/search" , methods=['GET' ,'POST'])
 def search():
