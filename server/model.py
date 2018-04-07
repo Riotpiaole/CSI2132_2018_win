@@ -179,7 +179,7 @@ class Restaurant(db.Model,object):
         self.hours = [ hour for day , hour in hours.items()  ]
         if food_type: self.food_type = food_type 
         if location: self.location = location 
-        self.URL = name.replace(" ","").join(".com")
+        self.URL =  "https://"+random_generator(size=9)+".com"
 
 
     def update ( self , args ):
