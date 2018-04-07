@@ -219,10 +219,28 @@ def deleteMenuItem(business_id, item_id):
 @app.route('/')
 @app.route('/raters/')
 def showRaters():
-    raters = db.session.query(Rater.user_id, Rating.business_id).join(Rating.user_id).group_by(Rating.business_id).all()
-    print(raters)
-        
-    return render_template('raters.html', raters = raters)
+    counts = func.count(Rating.user_id).label("count_rating")
+    rater = db.session.query( 
+        Rater ,Restaurant, MenuItem ,Rating,
+        MenuItem.item_id ,  Rater.user_id ,
+        Rating.menu_id , Rating.business_id ,
+        func.count(Rating.user_id).label("count_rating")).\
+    filter(Rating.user_id == Rater.user_id).\
+    filter(Restaurant.business_id == Rating.business_id).\
+    filter(MenuItem.item_id == Rating.menu_id ).\
+        group_by(Rater.name,Rater.user_id,
+                 Restaurant.business_id  ,
+                 MenuItem.item_id,
+                 Rating.menu_id,
+                 Rating.business_id,
+                 Rating.id 
+                 ).order_by( desc(counts)
+    ).first()
+
+    return render_template('raters.html', rater = rater[0], 
+                                          restaurant=rater[1],
+                                          item=rater[2],
+                                          rating=rater[3])
     
     
     
