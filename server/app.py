@@ -3,7 +3,7 @@ from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
 import os 
-from model import *
+
 
 # random string generator
 import random  
@@ -18,6 +18,8 @@ app = Flask( "Server" , template_folder = template_dir , static_folder = static_
 # Connecting to the database
 app.config.from_pyfile ( 'config.py' )
 db = SQLAlchemy( app ) # database object
+
+from model import *
 
 ############################ SHOW BLABLA IN JSON ################ 
 
@@ -63,6 +65,7 @@ def showRestaurants():
     for rest in restaurants:
         rest.location= Location.query.filter(
             Location.business_id == rest.business_id).first()
+        
     return render_template('restaurants.html', restaurants = restaurants)
 
 # create a new restaurant
@@ -178,6 +181,9 @@ def deleteMenuItem(business_id, item_id):
         return render_template('deleteMenuItem.html', item=itemToDelete)
 
 #############  Rater #########
+
+
+
 
 #############  Rating #########
 

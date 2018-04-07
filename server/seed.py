@@ -130,19 +130,19 @@ def init_db( num_data = 300 , insert_threshhold = 100 , inserting=True):
             parse_restaurant( bus_bucket ,location_bucket, business  ,  
                 restaurant_id= rest_id , 
                 genre_type= category )
-            # if len( bus_bucket ) == insert_threshhold : 
-            #     sess.add_all( bus_bucket )
-            #     sess.commit()
-            #     sess.add_all( location_bucket )
-            #     sess.commit()
-            #     location_bucket , bus_bucket = [] , [] 
+            if len( bus_bucket ) == insert_threshhold : 
+                sess.add_all( bus_bucket )
+                sess.commit()
+                sess.add_all( location_bucket )
+                sess.commit()
+                location_bucket , bus_bucket = [] , [] 
                  
         
         category = list (set( category )) # all of category food 
     
     # inserting menu_item 
     print ( "Adding menus........")
-    menu_id = read_csv_file( file_name= "Dish.csv" , category_id= category , restaurant_id= rest_id, save=False) 
+    menu_id = read_csv_file( file_name= "Dish.csv" , category_id= category , restaurant_id= rest_id, save=True) 
     
     # inserting user 
     print ( "Adding users ...... ")

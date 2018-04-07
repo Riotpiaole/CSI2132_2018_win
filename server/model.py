@@ -162,7 +162,7 @@ class Restaurant(db.Model,object):
 
     # 1 restaurant has N locations
     locations = db.relationship('Location' ,backref='restaurant' , lazy=True)
-
+    
     # 1 restaurant serves M menu items
     items = db.relationship('MenuItem')
 
