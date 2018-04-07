@@ -60,7 +60,7 @@ class MenuItem(db.Model):
     name = db.Column(db.String) 
 
     # starter, main, desert 
-    category = db.Column(db.String)
+    category = db.Column(db.String) 
     description  = db.Column(db.String)
     price  = db.Column(db.String)
 
@@ -70,12 +70,10 @@ class MenuItem(db.Model):
     # M menu item  has N ratings
     ratings = db.relationship('Rating') 
     def __init__ ( self      , name     , 
-                   item_type , category , 
-                   description ,  price , 
-                   business_id ): 
+                   item_type , description ,  
+                   price , business_id ): 
         self.item_id = encodestring( name )
         self.name = name 
-        self.category = category 
         self.description = description 
         self.price = price 
         self.business_id = business_id
@@ -162,9 +160,9 @@ class Restaurant(db.Model,object):
 
     # 1 restaurant has N locations
     locations = db.relationship('Location' ,backref='restaurant' , lazy=True)
-    
+
     # 1 restaurant serves M menu items
-    items = db.relationship('MenuItem')
+    items = db.relationship('MenuItem' , backref = 'restaurant' , lazy=True)
 
     def __init__(self  , b_id,
                 name   , review_count,
@@ -195,7 +193,12 @@ class Restaurant(db.Model,object):
     
     def addReview( self ):
         self.review = self.review+1
-    
+
+class MenuItemSchema(ma.Schema):
+    name = fields.String()
+    description = fields.String()
+    price = fields.String() 
+
 class LocationSchema(ma.Schema):
     address = fields.String()
     city = fields.String()
@@ -209,11 +212,8 @@ class RestaurantSchema( ma.Schema ):
     food_type = fields.List(fields.String())
     URL = fields.String() 
     location = fields.Nested( LocationSchema  )
+    menus = fields.Nested( MenuItemSchema )
     
-
-class MenuItemSchema(ma.Schema):
-    class Meta:
-        fields = ('item_id', 'name')
 
 class RaterSchema(ma.Schema):
     class Meta:

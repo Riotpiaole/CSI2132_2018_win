@@ -8,5 +8,6 @@ args ={
         'phone_number':3437773548}
 name='Stephen Szabo Salon'
 
-r = req.post("http://localhost:5050/restaurants/Rock's restaurant", 
-            params=args)
+r = req.get("http://localhost:5000/restaurant/")
+
+print ( r.json() )

@@ -1,31 +1,53 @@
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles.css')}}">
-    </head>
+<!DOCTYPE html>
+<html class='parallax' lang="en">
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+              
+                <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+                <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+              
+                <title>Restaurants</title>
+                <link rel="stylesheet" href="../static/style1.css">
+                
+                <nav class="navbar navbar-inverse">
+                    <div class="container-fluid">
+                      <div class="navbar-header">
+                        <a class="navbar-brand" href="index.html">Welcome</a>
+                      </div>
+                      <ul class="nav navbar-nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="Search.html">Search</a></li>
+                        <li  class="active"><a href=#>Register</a></li>
+                      </ul>
+                    </div>
+                </nav>
+        </head>
 
-    <body>
-        <div class="pane">
-            <h1>Restaurants</h1>
+    <body class="pimg1 parallax" style='background-image:url(../static/img/projects-landing.jpg)'></body>
+        
+            <h1 class="title" style="font-size: 100">Restaurants</h1>
             
-            <a href="{{url_for('newRestaurant')}}" > <h3> Create a New Restaurant </h3> </a>
+            
+            
 
-        {% for restaurant in restaurants %}
-        <p> {{restaurant.name}} <a href = "{{url_for('showMenu', business_id = restaurant.business_id)}}"> </a> </p>
+            <div id="restaurantList">
+                {% for restaurant in restaurants %}
+                
+                        <div id="listbox">
+                            <p style="color: black; font-size: 35px; text-align: center;">  {{restaurant.name}} <a href = "{{url_for('showMenu', business_id = restaurant.business_id)}}"> </a> </p>
+                        <div id="buttons" style="text-align: center;">
+                            <a class="button" href = "{{url_for('editRestaurant',business_id = restaurant.business_id)}}">Edit Restaurant</a>
+                            <a class="button" href = "{{url_for('deleteRestaurant',business_id = restaurant.business_id)}}">Delete Restaurant</a>
+                        </div>
+                    </div>
+                {% endfor %}
+                <a id="listbox" class="button" style="background-color:#09d80c; opacity: 1; font-size: 35px;" href="{{url_for('newRestaurant')}}" > <h3 style="text-align: center"> Create a New Restaurant </h3> </a>
+                </div>
         
-
-       
-
-        <p><a href = "{{url_for('editRestaurant',business_id = restaurant.business_id)}}">Edit Restaurant</a></p>
-
-        <p> <a href = "{{url_for('deleteRestaurant',business_id = restaurant.business_id)}}">Delete Restaurant</a> </p>
-
-
-        {% endfor %}   
-
-        
-
-    </div>
     </body>
-
 </html>
 
