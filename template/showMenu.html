@@ -4,29 +4,31 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 	</head>
 	<body>
+	
 		<div class = 'pane'>
-		<h1>{{ restaurant.name }}</h1>
+		<h1>Menu</h1>
 		
-		{% with messages = get_flashed_messages() %}
-      {% if messages %}
-          
-        <ul>
-        {% for message in messages %}
-            <li> <strong> {{ message }} </strong> </li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-    {% endwith %}
+			<h2>Location: </h2>
+				{% for i in location %}
+				<ul>
+					<li>{{i.address}}</li>
+					</ul>
+				{% endfor %}
+			
+			<h2>Website: </h2> 
+				<p> {{restaurant.URL}} </p>
+					
+
 
     {% if items !=[] %}
 
-		<a href = "{{url_for('newMenuItem', business_id = restaurant.business_id )}}">Create New Item</a>
+		<a href = "{{url_for('newMenuItem', business_id = business_id )}}">Create New Item</a>
 	</br></br>
 
 	<h2>Appetizers</h2>
 
 		{% for i in items %}
-		{% if i.category == 'Appetizer' %}
+		{% if i.category == 'Appetizers' %}
 
 		<p>{{i.name}}</p>
 	
@@ -34,11 +36,11 @@
 		<p>{{i.description}}</p>
 	
 
-		<p>{{i.price}}</p>
+		<p>{{i.price}} CAD</p>
 	
-		<a href='{{url_for('editMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Edit</a>
+		<a href='{{url_for('editMenuItem', business_id = business_id, item_id=item_id ) }}' >Edit</a>
 	</br>
-	<a href='{{url_for('deleteMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Delete</a>
+	<a href='{{url_for('deleteMenuItem', business_id = business_id, item_id=item_id ) }}' >Delete</a>
 </br>
 </br>
 		{% endif %}
@@ -52,7 +54,7 @@
 	<h2>Entrees</h2>
 
 		{% for i in items %}
-		{% if i.category == 'Entree' %}
+		{% if i.category == 'Entrees' %}
 
 		<p>{{i.name}}</p>
 	
@@ -60,11 +62,11 @@
 		<p>{{i.description}}</p>
 	
 
-		<p>{{i.price}}</p>
+		<p>{{i.price}} CAD</p>
 	
-		<a href='{{url_for('editMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Edit</a>
+		<a href='{{url_for('editMenuItem', business_id = business_id, item_id=item_id ) }}' >Edit</a>
 	</br>
-	<a href='{{url_for('deleteMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Delete</a>
+	<a href='{{url_for('deleteMenuItem', business_id = business_id, item_id=item_id ) }}' >Delete</a>
 </br>
 </br>
         {% endif %}
@@ -78,7 +80,7 @@
 	<h2>Desserts</h2>
 
 		{% for i in items %}
-		{% if i.category == 'Dessert' %}
+		{% if i.category == 'Desserts' %}
 
 		<p>{{i.name}}</p>
 	
@@ -86,11 +88,11 @@
 		<p>{{i.description}}</p>
 	
 
-		<p>{{i.price}}</p>
+		<p>{{i.price}} CAD</p>
 	
-		<a href='{{url_for('editMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Edit</a>
+		<a href='{{url_for('editMenuItem', business_id = business_id, item_id=item_id ) }}' >Edit</a>
 	
-	<a href='{{url_for('deleteMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Delete</a>
+	<a href='{{url_for('deleteMenuItem', business_id = business_id, item_id=item_id ) }}' >Delete</a>
 </br>
 </br>
 		{% endif %}
@@ -104,7 +106,7 @@
 	<h2>Beverages</h2>
 
 		{% for i in items %}
-		{% if i.category == 'Beverage' %}
+		{% if i.category == 'Beverages' %}
 
 		<p>{{i.name}}</p>
 	
@@ -112,11 +114,11 @@
 		<p>{{i.description}}</p>
 	
 
-		<p>{{i.price}}</p>
+		<p>{{i.price}} CAD</p>
 
-		<a href='{{url_for('editMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Edit</a>
+		<a href='{{url_for('editMenuItem', business_id = business_id, item_id=item_id ) }}' >Edit</a>
 	</br>
-	<a href='{{url_for('deleteMenuItem', business_id = restaurant.business_id, menu_id=i.item_id ) }}' >Delete</a>
+	<a href='{{url_for('deleteMenuItem', business_id = business_id, item_id=item_id ) }}' >Delete</a>
 </br>
 </br>
 {% endif %}
@@ -127,7 +129,7 @@
 
 		{% else %}
 		<p> You currently have no menu items. <p>
-		<a href = "{{url_for('newMenuItem', business_id = restaurant.business_id )}}">Create New Item</a>
+		<a href = "{{url_for('newMenuItem', business_id = business_id )}}">Create New Item</a>
 			{% endif %}
 </div>
 	</body>

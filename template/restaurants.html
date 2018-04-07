@@ -38,7 +38,7 @@
                 {% for restaurant in restaurants %}
                 
                         <div id="listbox">
-                            <p style="color: black; font-size: 35px; text-align: center;">  {{restaurant.name}} <a href = "{{url_for('showMenu', business_id = restaurant.business_id)}}"> </a> </p>
+                            <p style="color: black; font-size: 35px; text-align: center;">   <a href = "{{url_for('showMenu', business_id = restaurant.business_id)}}"> {{restaurant.name}}</a> </p>
                         <div id="buttons" style="text-align: center;">
                             <a class="button" href = "{{url_for('editRestaurant',business_id = restaurant.business_id)}}">Edit Restaurant</a>
                             <a class="button" href = "{{url_for('deleteRestaurant',business_id = restaurant.business_id)}}">Delete Restaurant</a>

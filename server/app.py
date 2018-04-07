@@ -3,7 +3,7 @@ from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
 import os 
-
+from model import *
 
 # random string generator
 import random  
@@ -19,7 +19,6 @@ app = Flask( "Server" , template_folder = template_dir , static_folder = static_
 app.config.from_pyfile ( 'config.py' )
 db = SQLAlchemy( app ) # database object
 
-from model import *
 
 ############################ SHOW BLABLA IN JSON ################ 
 
@@ -61,7 +60,7 @@ def ratingsJSON():
 @app.route('/')
 @app.route('/restaurant/')
 def showRestaurants():
-    restaurants = db.session.query(Restaurant).limit(5).all()
+    restaurants = db.session.query(Restaurant).limit(12).all()
     for rest in restaurants:
         rest.location= Location.query.filter(
             Location.business_id == rest.business_id).first()
@@ -124,11 +123,12 @@ def deleteRestaurant(business_id):
 @app.route('/restaurant/<string:business_id>')
 @app.route('/restaurant/<string:business_id>/menu')
 def showMenu(business_id):
-    restaurant = db.session.query(Restaurant).filter_by(business_id).one()
+    location = Location.query.filter( Location.business_id == business_id ).all()
+    restaurant = Restaurant.query.filter( Restaurant.business_id == business_id ).first()
     items = db.session.query(MenuItem).filter_by(
-        business_id=business_id).all()
+        business_id=business_id).limit(8)
     
-    return render_template('showMenu.html', items=items, restaurant=restaurant)
+    return render_template('showMenu.html', items=items, business_id=business_id,restaurant=restaurant, location=location)
 
 # Create a new menu item
 @app.route(
