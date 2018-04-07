@@ -159,6 +159,7 @@ def showMenu(business_id):
     
     
     return render_template('showMenu.html', items=items, 
+                                            hours=restaurant.hours,
                                             business_id=business_id,
                                             restaurant=restaurant, 
                                             location=location,
@@ -171,7 +172,7 @@ def showMenu(business_id):
 def newMenuItem(business_id):
     if request.method == 'POST':
         newItem = MenuItem(name=request.form['name'], description=request.form[
-                           'description'], price=request.form['price'], category=request.form['category'], business_id=business_id)
+                           'description'], price=request.form['price'], item_type=request.form['category'], business_id=business_id)
         db.session.add(newItem)
         db.session.commit()
 
@@ -181,7 +182,7 @@ def newMenuItem(business_id):
 
 
 # Update a menu item
-@app.route('/restaurant/<string:business_id>/menu/<string:item_id>/edit',
+@app.route('/restaurant/<string:business_id>/menu/<int:item_id>/edit',
            methods=['GET', 'POST'])
 def editMenuItem(business_id, item_id):
     editedItem = db.session.query(MenuItem).filter_by(item_id=item_id).one()
@@ -203,19 +204,19 @@ def editMenuItem(business_id, item_id):
             'editmenuitem.html', business_id=business_id, item_id=item_id, item=editedItem)
 
 # Delete a menu item
-@app.route('/restaurant/<string:business_id>/menu/<string:item_id>/delete',
+@app.route('/restaurant/<string:business_id>/menu/<int:item_id>/delete',
            methods=['GET', 'POST'])
 def deleteMenuItem(business_id, item_id):
-    itemToDelete = db.session.query(MenuItem).filter_by(id=item_id).one()
+    itemToDelete = db.session.query(MenuItem).filter_by(item_id=item_id).one()
     if request.method == 'POST':
         db.session.delete(itemToDelete)
         db.session.commit()
         return redirect(url_for('showMenu', business_id=business_id))
     else:
-        return render_template('deleteMenuItem.html', item=itemToDelete)
+        return render_template('deleteMenuItem.html', item=itemToDelete, business_id=business_id,item_id=itemToDelete.item_id)
 
 #############  Raters #########
-# show some raters in one page
+# show answers for the last part in the same page
 @app.route('/')
 @app.route('/raters/')
 def showRaters():
@@ -242,7 +243,60 @@ def showRaters():
                                           item=rater[2],
                                           rating=rater[3])
     
-    
+
+# CRUD for raters
+@app.route('/')
+@app.route('/raterlist/')
+def raterList():
+    raterlist = db.session.query(Rater).limit(20).all()
+
+    return render_template('raterlist.html',raterlist=raterlist)
+ 
+# Create a new rater
+@app.route(
+    '/raterlist/new/', methods=['GET', 'POST'])
+def newRater():
+    if request.method == 'POST':
+        newRater = Rater(name=request.form['name'],
+                        join_date=request.form['join_date'],
+                        user_id='00',
+                        reputation='0',
+                        rater_type='0'
+                        )
+        db.session.add(newRater)
+        db.session.commit()
+ 
+        return redirect(url_for('raterList'))
+    else:
+        return render_template('newRater.html')    
+
+# Update a rater
+@app.route('/raterlist/<string:user_id>/edit/',methods=['GET','POST'])
+def editRater(user_id):
+    e_rater = db.session.query(
+        Rater).filter_by(user_id=user_id).one()
+    if request.method == 'POST':
+            if request.form['name']:
+                e_rater.name = request.form['name']
+                return redirect(url_for('raterList'))
+    else:
+            return render_template(
+                'editRater.html',e_rater=e_rater, user_id=e_rater.user_id)
+
+# Delete a rater
+@app.route('/raterlist/<string:user_id>/delete/', methods=['GET', 'POST'])
+def deleteRater(user_id):
+    d_rater = db.session.query(
+        Rater).filter_by(user_id=user_id).one()
+    if request.method == 'POST':
+        db.session.delete(d_rater)
+        db.session.commit()
+        return redirect(
+            url_for('raterList'))
+    else:
+        return render_template(
+            'deleteRater.html',d_rater=d_rater, user_id=d_rater.user_id)
+
     
 
 
@@ -253,9 +307,9 @@ def showRatings():
 
     return render_template('ratings.html',)
 
-#############  Rating Item #########
+
 
 
 
 if __name__ == "__main__":
-    app.run( debug=True )
+    app.run( port=5000,debug=True )
