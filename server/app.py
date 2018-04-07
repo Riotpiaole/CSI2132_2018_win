@@ -229,6 +229,11 @@ def showRaters():
 
 
 #############  Ratings #########
+@app.route('/')
+@app.route('/ratings/')
+def showRatings():
+
+    return render_template('ratings.html',)
 
 #############  Rating Item #########
 
