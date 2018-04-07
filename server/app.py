@@ -1,12 +1,16 @@
-from flask import Flask, jsonify, request, render_template, redirect, url_for
+from flask import Flask, jsonify, request, render_template, redirect, url_for ,flash
 from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func 
-from sqlalchemy import desc
-
+from sqlalchemy import desc ,or_
+from forms import RestySearchForm 
+ 
 import os 
 from model import *
+
+SECRET_KEY = os.urandom(24)
+
 
 # random string generator
 import random  
@@ -21,40 +25,8 @@ static_dir = os.path.abspath( "../static/" )
 app = Flask( "Server" , template_folder = template_dir , static_folder = static_dir)
 # Connecting to the database
 app.config.from_pyfile ( 'config.py' )
+app.config['SECRET_KEY']=SECRET_KEY
 db = SQLAlchemy( app ) # database object
-
-
-############################ SHOW BLABLA IN JSON ################ 
-
-# Show restaurants in JSON 
-@app.route( "/restaurants/JSON" )
-def restaurantsJSON():
-    restaurants = Restaurant.query.limit(10).all()
-    restaurants = restaurants_schema.dump( restaurants )
-    return jsonify( restaurants.data )
-    
-# Show locations in JSON
-@app.route( "/locations/JSON" )
-def locationsJSON():
-    locations = Location.query.limit(10).all()
-    locations = locations_schema.dump( locations )
-    return jsonify( locations.data )
-
-# Show raters in JSON
-@app.route( "/raters/JSON" )
-def ratersJSON():
-    raters = Rater.query.limit(10).all()
-    raters = raters_schema.dump( raters )
-    return jsonify( raters.data )
-
-# Show ratings in JSON
-@app.route( "/ratings/JSON" )
-def ratingsJSON():
-    ratings = Rating.query.limit(10).all()
-    ratings = ratings_schema.dump( ratings )
-    return jsonify( ratings.data )
-
-
 
 ######### Create Read Update Delete ###########################
 
@@ -62,29 +34,58 @@ def ratingsJSON():
 
 # show all restaurants
 @app.route('/')
-@app.route('/restaurant/')
-def showRestaurants():
+@app.route('/restaurant/' , methods=['GET','POST'])
+def restaurants():
     restaurants = db.session.query(Restaurant).limit(12).all()
     for rest in restaurants:
         rest.location= Location.query.filter(
             Location.business_id == rest.business_id).first()
     cates = db.session.query(Restaurant.food_type.distinct().label("food_type"))
     all_cate = [ row.food_type for row in cates.all()]
-    os.system("clear")
     filters = list ( set([ y for x in all_cate for y in x ] ))
     random.shuffle( filters )
+    
+    # search bar
+    form = RestySearchForm(request.form)
+    if request.method == 'POST':
+        # name = request.form[ 'name' ]
+        flash('All the form fields are required. ')
+        results = []
+        name=request.form['name']
+        # search_string = search.data [ 'search' ]
+        print ("The query string ", name )
+        # results = db.session.query( 
+        #     Restaurant 
+        # ).filter( 
+        #     or_( *[name.like( search_string ) 
+        #             for name in Restaurant.food_type ])
+        # ).all()
+
+
+        # return render_template('restaurants.html', restaurants = restaurants ,
+        #                                        categories=filters[:10],
+        #                                        form = form,
+        #                                        cated=False)
+
     return render_template('restaurants.html', restaurants = restaurants ,
                                                categories=filters[:10],
+                                               form = form,
                                                cated=True)
+
+@app.route('/sign_up/' , methods=['GET','POST'])
+def register():
+    return render_template( 'register.html')
 
 @app.route('/restaurant/<catergories>')
 def cateRestaurants(catergories):
+    form = RestySearchForm(request.form)
     restaurant_ = Restaurant.query.filter(
         Restaurant.food_type.any(catergories)).all()
     
     # cated as false for skipping the category display
     return render_template('restaurants.html' , restaurants = restaurant_ , 
                                                 catergories=catergories ,
+                                                form = form,
                                                 cated = False )
 
 # create a new restaurant
@@ -170,8 +171,8 @@ def showMenu(business_id):
     '/restaurant/<string:business_id>/menu/new/', methods=['GET', 'POST'])
 def newMenuItem(business_id):
     if request.method == 'POST':
-        newItem = MenuItem(name=request.form['name'], description=request.form[
-                           'description'], price=request.form['price'], category=request.form['category'], business_id=business_id)
+        newItem = MenuItem(name=request.form['name'], 
+            description=request.form['description'], price=request.form['price'], category=request.form['category'], business_id=business_id)
         db.session.add(newItem)
         db.session.commit()
 
@@ -216,7 +217,6 @@ def deleteMenuItem(business_id, item_id):
 
 #############  Raters #########
 # show some raters in one page
-@app.route('/')
 @app.route('/raters/')
 def showRaters():
     counts = func.count(Rating.user_id).label("count_rating")
@@ -241,13 +241,13 @@ def showRaters():
                                           restaurant=rater[1],
                                           item=rater[2],
                                           rating=rater[3])
-    
-    
-    
 
-
+@app.route("/restaurants/search" , methods=['GET' ,'POST'])
+def search():
+    pass 
+    
 #############  Ratings #########
-@app.route('/')
+
 @app.route('/ratings/')
 def showRatings():
 

@@ -19,27 +19,46 @@
                         <a class="navbar-brand" href="index.html">Welcome</a>
                       </div>
                       <ul class="nav navbar-nav">
-                        <li><a href="index.html">Home</a></li>
+                        <li class="active"><a href="restaurant.html">Home</a></li>
                         <li><a href="Search.html">Search</a></li>
-                        <li  class="active"><a href=#>Register</a></li>
+                        <li><a href="{{url_for('register')}}">Register</a></li>
                       </ul>
                     </div>
                 </nav>
         </head>
 
     <body class="pimg1 parallax" style='background-image:url(../static/img/projects-landing.jpg)'></body>
-        
-            <h1 class="title" style="font-size: 100">Restaurants</h1>
-            {%if cated %}
-                <div id="cate_restaurant">
-                    <h1>Categories</h1>
-                    {% for category in categories %}
-                        <a class='button' href= "{{url_for('cateRestaurants',catergories = category)}}">{{category}}</>
-                    {% endfor%}
-                </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message[1] }}</li>
+                    {% endfor %}
+                </ul>
             {% endif %}
-            
+        {% endwith %}
+        <form action="" method="post" role="form">
+            {{ form.csrf }}
 
+            <div class="form-group">
+                <label for="search_string">Search Bar:</label>
+                <input type="text" class="form-control" id="name" name="Restaurants" placeholder="Search for rater or name of restaurant">
+            </div>
+            <button type='submit' class="btn btn-success">Submit</button>
+        </form>
+                {%if cated %}
+                <div id='category'>
+                    <div id="cate_restaurant">
+                        <h1>Categories</h1>
+                        {% for category in categories %}
+                            <a class='button' href= "{{url_for('cateRestaurants',catergories = category)}}">{{category}}</>
+                        {% endfor%}
+                    </div>
+                </div>
+                {% endif %}
+                    
+            
+        <!-- <h1 class="title" style="font-size: 100">Restaurants</h1>
             <div id="restaurantList">
                 {% for restaurant in restaurants %}
                 
@@ -53,7 +72,7 @@
                 {% endfor %}
                 <a id="listbox" class="button" style="background-color:#09d80c; opacity: 1; font-size: 35px;" href="{{url_for('newRestaurant')}}" > <h3 style="text-align: center"> Create a New Restaurant </h3> </a>
                 </div>
-        
+         -->
     </body>
 </html>
 

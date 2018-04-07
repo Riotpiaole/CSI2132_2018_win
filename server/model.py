@@ -69,10 +69,9 @@ class MenuItem(db.Model):
 
     # M menu item  has N ratings
     ratings = db.relationship('Rating') 
-    def __init__ ( self      , name     , 
-                   item_type , description ,  
+    def __init__ ( self  ,
+                   name  ,  item_type , description ,  
                    price , business_id ): 
-        self.item_id = encodestring( name )
         self.name = name 
         self.description = description 
         self.price = price 

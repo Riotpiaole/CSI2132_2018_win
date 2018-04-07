@@ -47,7 +47,7 @@ auto_sample = lambda x : x % 300
 
 def parse_restaurant( bucket , l_bucket, line , restaurant_id = None   ):
     item = json.loads( line ) 
-    current_location = Location(item['address'],item['city'] ,
+    current_location = Location( item['address'],item['city'] ,
                                 item['state']   , item['postal_code'] , 
                                 item['business_id'] ,
                                 lat=item['latitude'], lon=item['longitude'])
