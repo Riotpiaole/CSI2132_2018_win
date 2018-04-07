@@ -30,8 +30,14 @@
     <body class="pimg1 parallax" style='background-image:url(../static/img/projects-landing.jpg)'></body>
         
             <h1 class="title" style="font-size: 100">Restaurants</h1>
-            
-            
+            {%if cated %}
+                <div id="cate_restaurant">
+                    <h1>Categories</h1>
+                    {% for category in categories %}
+                        <a class='button' href= "{{url_for('cateRestaurants',catergories = category)}}">{{category}}</>
+                    {% endfor%}
+                </div>
+            {% endif %}
             
 
             <div id="restaurantList">

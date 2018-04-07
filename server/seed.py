@@ -51,7 +51,6 @@ def parse_restaurant( bucket , l_bucket, line , restaurant_id = None   ):
                                 item['state']   , item['postal_code'] , 
                                 item['business_id'] ,
                                 lat=item['latitude'], lon=item['longitude'])
-    
     l_bucket.append( current_location )
     rest = Restaurant( 
                     item['business_id'], item['name']   , item['review_count'],
