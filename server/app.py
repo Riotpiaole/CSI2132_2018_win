@@ -301,11 +301,11 @@ def deleteRater(user_id):
 
 
 #############  Ratings #########
-@app.route('/')
-@app.route('/ratings/')
-def showRatings():
-
-    return render_template('ratings.html',)
+@app.route('/ratings/<string:business_id>/')
+@app.route('/ratings/<string:business_id>/ratings')
+def showRatings(business_id):
+    ratings=db.session.query(Rating).filter_by(business_id).all()
+    return render_template('ratings.html',ratings=ratings)
 
 
 
