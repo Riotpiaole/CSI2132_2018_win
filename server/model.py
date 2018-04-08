@@ -9,8 +9,7 @@ from marshmallow import Schema, fields, pprint
 
 ma = Marshmallow( app )
 
-import random  
-import string
+import random , os ,string
 def random_generator( size=10 ,chars = string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size) )
 
@@ -73,6 +72,9 @@ class MenuItem(db.Model):
     def __init__ ( self  ,
                    name  ,  item_type , description ,  
                    price , business_id ): 
+        self.item_id = db.session.execute('''
+            select count(*) from menuitem     
+            ''').fetchall ()[0][0]+1
         self.name = name 
         self.description = description 
         self.price = price 
