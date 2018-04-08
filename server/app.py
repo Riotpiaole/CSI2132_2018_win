@@ -30,6 +30,10 @@ app.config.from_pyfile ( 'config.py' )
 app.config['SECRET_KEY']=SECRET_KEY
 db = SQLAlchemy( app ) # database object
 
+<<<<<<< HEAD
+=======
+from model import *
+>>>>>>> 3a23430fcd1f86576902f0cf66f57610e7658039
 
 ######### Create Read Update Delete ###########################
 
@@ -71,7 +75,11 @@ def restaurants():
         #                                        cated=False)
 
     return render_template('restaurants.html', restaurants = restaurants ,
+<<<<<<< HEAD
                                                categories=filters[:5],
+=======
+                                               categories=filters[:5   ],
+>>>>>>> 3a23430fcd1f86576902f0cf66f57610e7658039
                                                form = form,
                                                cated=True)
 
