@@ -401,7 +401,10 @@ group by rater.name''' ).fetchall()
         Rating.date
     ).order_by( Rating.date ).limit(10).all()
 
-    Itialian = db.session()
+    Itialian = db.session.execute('''
+        select restaurant.food_type from restaurant 
+        where restaurant.food_type @> ARRAY['{}']::varchar[]
+    '''.format( "French")).fetchall()
    
     
     return render_template('news.html' , restaurant=restaurant[0], 
