@@ -3,14 +3,16 @@ from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func 
-from sqlalchemy import desc ,or_
+from sqlalchemy import desc ,or_ ,asc
 from forms import RestySearchForm 
  
 import os 
 from model import *
 
+
 SECRET_KEY = os.urandom(24)
 
+map_role =  dict([('0' , "Staff"), ('1',"Blogger") , ('2' ,"Food Critics")])
 
 # random string generator
 import random  
@@ -44,7 +46,7 @@ def restaurants():
     all_cate = [ row.food_type for row in cates.all()]
     filters = list ( set([ y for x in all_cate for y in x ] ))
     random.shuffle( filters )
-    
+    print ( filters )
     # search bar
     form = RestySearchForm(request.form)
     if request.method == 'POST':
@@ -155,9 +157,8 @@ def showMenu(business_id):
     
     most_expensive = db.session.query(MenuItem).order_by(
         desc(MenuItem.price)
-    ).limit(1).first()
-    
-    
+    ).limit(1).first() 
+    # select * from  MenuItem group by 
     
     return render_template('showMenu.html', items=items, 
                                             hours=restaurant.hours,
@@ -208,8 +209,7 @@ def editMenuItem(business_id, item_id):
             'editmenuitem.html', business_id=business_id, item_id=item_id, item=editedItem)
 
 # Delete a menu item
-@app.route('/restaurant/<string:business_id>/menu/<int:item_id>/delete',
-           methods=['GET', 'POST'])
+@app.route('/restaurant/<string:business_id>/menu/<int:item_id>/delete',methods=['GET', 'POST'])
 def deleteMenuItem(business_id, item_id):
     itemToDelete = db.session.query(MenuItem).filter_by(item_id=item_id).one()
     if request.method == 'POST':
@@ -218,6 +218,21 @@ def deleteMenuItem(business_id, item_id):
         return redirect(url_for('showMenu', business_id=business_id))
     else:
         return render_template('deleteMenuItem.html', item=itemToDelete, business_id=business_id,item_id=itemToDelete.item_id)
+
+@app.route('/restaurant/<string:business_id>/rater_staff/')
+def staff_poor_review( business_id ):
+    # TODO not testing 
+    result =  db.session.execute(''' select rater.name , location.first_open_date , rating.mood from rater join 
+( location join rating on location.business_id = rating.business_id)
+on rating.user_id = rater.user_id where rater.rater_type = '0' 
+group by rater.name ,location.first_open_date , rating.mood
+having rating.mood <= avg( rating.mood)''' ).fetchall()
+    return render_template('')
+
+@app.route('/restaurant/best/<string:catergory>/')
+def best_catergory(catergory ):
+    # TODO not testing 
+    pass 
 
 #############  Raters #########
 # show some raters in one page
@@ -240,7 +255,7 @@ def showRaters():
                  Rating.menu_id,
                  Rating.business_id,
                  Rating.id 
-                 ).order_by( desc(counts)
+                 ).order_by( asc(counts)
     ).first()
 
     return render_template('raters.html', rater = rater[0], 
@@ -254,13 +269,16 @@ def showRaters():
 @app.route('/')
 @app.route('/raterlist/')
 def raterList():
-    raterlist = db.session.query(Rater).limit(20).all()
+    raterlist = db.session.query(
+        Rater,
+        func.count(Rating)
+    ).group_by( 
+        Rater.user_id , Rating.user_id).limit(20).all()
 
     return render_template('raterlist.html',raterlist=raterlist)
  
 # Create a new rater
-@app.route(
-    '/raterlist/new/', methods=['GET', 'POST'])
+@app.route('/raterlist/new/', methods=['GET', 'POST'])
 def newRater():
     if request.method == 'POST':
         newRater = Rater(name=request.form['name'],
@@ -305,8 +323,6 @@ def deleteRater(user_id):
 
     
 
-
-
 @app.route("/restaurants/search" , methods=['GET' ,'POST'])
 def search():
     pass 
@@ -315,15 +331,79 @@ def search():
 @app.route('/ratings/<string:business_id>/')
 @app.route('/ratings/<string:business_id>/ratings')
 def showRatings(business_id):
-    ratings=Rating.query.filter(Rating.business_id == business_id).limit(10)
+    avg = format (float ( db.session.query( 
+        func.avg(Rating.mood) ,  Rating.business_id
+    ).filter( business_id == Rating.business_id ).group_by(
+        Rating.business_id).first()[0]),".2f")
+    print ( "Average" ,avg ) 
     
-    return render_template('ratings.html',ratings=ratings)
-
-
+    result = db.session.query( 
+        Rater  , Rating ).\
+    filter( business_id == Rating.business_id).\
+    filter(Rater.user_id == Rating.user_id ).group_by( 
+         Rater , 
+         Rating.id,
+         Rating.date,
+         Rating.comments,
+        Rating.business_id).limit(20).all()
+    result = [ list( x ) for x in  result  ]
+    
+    print ( result )
+    
+    return render_template('ratings.html',ratings=result,total=avg )
 
 @app.route('/news/')
 def news():
-    return render_template('news.html')
+    raterlist = db.session.execute( '''select rater.name, count(rating) as ratings
+from rater join rating on rater.user_id=rating.user_id 
+group by rater.name''' ).fetchall()
+    print (raterlist )
+    input()
+
+    restaurants = db.session().query( 
+        Restaurant ,Rating , Location).\
+    filter(
+        func.extract('year',Rating.date) == '2015').\
+    filter( 
+        Location.business_id == Restaurant.business_id)\
+    .limit(5).all() 
+    restaurant , rating , location = zip(*restaurants)
+    
+    raters = db.session().query( 
+        Rater , func.min(Rating.mood) , 
+        Location , Restaurant
+    ).filter( 
+        func.upper(Rater.name).like('Peter'.upper()) # since 0 is Staff in our description 
+    ).filter( 
+        Rating.business_id == Location.business_id
+    ).filter(
+        Restaurant.business_id == Rating.business_id
+    ).group_by(
+        Rater.user_id,
+        Rating.mood,
+        Location.location_id,
+        Restaurant.business_id,
+        Rating.date
+    ).order_by( 
+        asc(Rating.mood) ,
+        func.DATE(Rating.date)).limit(20).all()
+    
+    rest_spec= raters[len(raters)-1][3]
+    other_critics = db.session.query( 
+        Restaurant,Rating.date , Rating.mood
+    ).filter(
+        Restaurant.business_id == rest_spec.business_id 
+    ).group_by( 
+        Restaurant.business_id,
+        Rating.id,
+        Rating.date
+    ).order_by( Rating.date ).limit(10).all()
+   
+    
+    return render_template('news.html' , restaurant=restaurant[0], 
+                                         location = location[0] , 
+                                         johns=raters,
+                                         others=other_critics)
 
 if __name__ == "__main__":
     app.run( port=5000,debug=True )

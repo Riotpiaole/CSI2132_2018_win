@@ -41,6 +41,7 @@ class Location(db.Model):
         self.post_code =post_code
         self.phone_number =phone_number
         self.business_id =business_id
+        self.manager_name = random_generator()
         if lat : self.latitude = lat
         if lon : self.longtitude = lon
 
@@ -91,8 +92,8 @@ class Rater(db.Model):
     # show when this rater first joined the website
     join_date = db.Column(db.DateTime)
 
-    # type of rater (blog, online, food critic)
-    rater_type = db.Column(db.String) 
+    # type of rater (staff, online, food critic)
+    rater_type = db.Column(db.Integer) 
 
     # takes a value between 1 and 5
     # the value db.Modeld on the number of people who found 

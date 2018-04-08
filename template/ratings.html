@@ -9,11 +9,12 @@
             <h2>Total Ratings: {{total}} </h2>
             </br></br>
             <h2>Samples</h2>
-            {% for r in ratings %}
+            {% for rating in ratings %}
                <ul>
-                   <li>{{rater.name}}</li>
-                   <li>{{rating.date}}</li>
-                   <li>{{rating.comments}}</li>
+                    <li>{{rating[0].name}}</li>
+                    <li>Rating {{rating[1].mood}}</li>
+                   <li>{{rating[1].date}}</li>
+                   <li>{{rating[1].comments}}</li>
                    </br>
                </ul>
             {% endfor %}    
