@@ -37,9 +37,9 @@
                 {% for rater in raterlist %}
                 
                         <div id="listbox">
-                            <p style="color: black; font-size: 35px; text-align: center;">   {{rater.name}} </p>
-                            <p>{{total}} ratings</p>
-                            <p>Join date: {{rater.join_date}}</p>
+                            <p style="color: black; font-size: 35px; text-align: center;">   {{rater[0]}} </p>
+                            <p>{{rater[2]}} ratings</p>
+                            <p>Join date: {{rater[1]}}</p>
                         <div id="buttons" style="text-align: center;">
                             <a class="button" href = "{{url_for('editRater',user_id = rater.user_id)}}">Edit Rater</a>
                             <a class="button" href = "{{url_for('deleteRater',user_id = rater.user_id)}}">Delete Rater</a>
