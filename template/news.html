@@ -34,11 +34,11 @@
             <h2>{{restaurant.name}} has not been rated in 2015.</h2>
             
             <ul>
-                <li>Phone number: {{location.phone}}</li>
-                <li>Type: {{restaurant.category}} </li>
+                <li>Phone number: {{location.phone_number}}</li>
+                <li>Type: {{restaurant.food_type}} </li>
             </ul>
 
-            <h2>John gave {{johns[3].name}}, opened on {{johns[2].open_date}}, the lowest rating.</h2>
+            <h2>John gave {{johns[3].name}}, opened on {{johns[2].first_open_date}}, the lowest rating.</h2>
             <h3>Other ratings given by Staff Peter</h3>
             {% for other in others %}
                 <ul>
@@ -47,7 +47,7 @@
             {% endfor %}
 
             <h2> Sushi Bars won the highest rating among all type food!</h2>
-  
+                
         </div>
     </body>
 </html> 

@@ -16,6 +16,7 @@ def random_generator( size=10 ,chars = string.ascii_uppercase + string.digits):
 
 fake = faker.Faker()
 
+
 class Location(db.Model):
     __tablename__='location'
     address         = db.Column(db.String)
@@ -45,7 +46,7 @@ class Location(db.Model):
         self.manager_name = random_generator()
         if lat : self.latitude = lat
         if lon : self.longtitude = lon
-        self.open_date = fake.date_between( start_date='-50y',end_date= 'now')
+        self.first_open_date = fake.date_time_between( start_date='-50y',end_date= 'now')
 
     def update ( self , args ): 
         for key , value in args.items():

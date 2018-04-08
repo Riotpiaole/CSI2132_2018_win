@@ -7,7 +7,7 @@ from sqlalchemy import desc ,or_ ,asc
 from forms import RestySearchForm 
  
 import os 
-
+from model import *
 
 
 SECRET_KEY = os.urandom(24)
@@ -30,7 +30,7 @@ app.config.from_pyfile ( 'config.py' )
 app.config['SECRET_KEY']=SECRET_KEY
 db = SQLAlchemy( app ) # database object
 
-from model import *
+
 ######### Create Read Update Delete ###########################
 
 ######### RESTAURANT ######### 
@@ -47,7 +47,7 @@ def restaurants():
     all_cate = [ row.food_type for row in cates.all()]
     filters = list ( set([ y for x in all_cate for y in x ] ))
     random.shuffle( filters )
-    print ( filters )
+    
     # search bar
     form = RestySearchForm(request.form)
     if request.method == 'POST':
@@ -71,7 +71,7 @@ def restaurants():
         #                                        cated=False)
 
     return render_template('restaurants.html', restaurants = restaurants ,
-                                               categories=filters[:10],
+                                               categories=filters[:5],
                                                form = form,
                                                cated=True)
 
@@ -336,7 +336,7 @@ def showRatings(business_id):
         func.avg(Rating.mood) ,  Rating.business_id
     ).filter( business_id == Rating.business_id ).group_by(
         Rating.business_id).first()[0]),".2f")
-    print ( "Average" ,avg ) 
+
     
     result = db.session.query( 
         Rater  , Rating ).\
@@ -367,7 +367,7 @@ group by rater.name''' ).fetchall()
     filter( 
         Location.business_id == Restaurant.business_id)\
     .limit(5).all() 
-    restaurant , rating , location = zip(*restaurants)
+    restaurant , _ , location = zip(*restaurants)
     
     # raters
     raters = db.session().query( 
@@ -400,11 +400,13 @@ group by rater.name''' ).fetchall()
         Rating.id,
         Rating.date
     ).order_by( Rating.date ).limit(10).all()
+
+    Itialian = db.session()
    
     
     return render_template('news.html' , restaurant=restaurant[0], 
                                          location = location[0] , 
-                                         johns=raters,
+                                         johns=raters[0],
                                          others=other_critics)
 
 if __name__ == "__main__":
