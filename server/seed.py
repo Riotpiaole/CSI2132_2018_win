@@ -48,9 +48,9 @@ auto_sample = lambda x : x % 300
 def parse_restaurant( bucket , l_bucket, line , restaurant_id = None   ):
     item = json.loads( line ) 
     current_location = Location( item['address'],item['city'] ,
-                                item['state']   , item['postal_code'] , 
-                                item['business_id'] ,
-                                lat=item['latitude'], lon=item['longitude'])
+                                item['postal_code']  , 
+                                item['business_id'] ,lat=item['latitude'], lon=item['longitude'])
+    
     l_bucket.append( current_location )
     rest = Restaurant( 
                     item['business_id'], item['name']   , item['review_count'],
@@ -108,7 +108,7 @@ def init_db( num_data = 300 , insert_threshhold = 100 , inserting=True):
     user_id ,rating_bucket , rest_id  = [], [] , []
 
     print ( "Inserting data ......")
-    os.system ( "clear")
+    
     print ( "Adding locations and busiensses ...... ")  
     
     
@@ -117,6 +117,7 @@ def init_db( num_data = 300 , insert_threshhold = 100 , inserting=True):
             if count > num_data : break
             parse_restaurant( bus_bucket ,location_bucket, business  ,  
                 restaurant_id= rest_id )
+            
             if len( bus_bucket ) == insert_threshhold : 
                 sess.add_all( bus_bucket )
                 sess.commit()
