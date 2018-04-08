@@ -50,7 +50,7 @@ def parse_restaurant( bucket , l_bucket, line , restaurant_id = None   ):
     current_location = Location( item['address'],item['city'] ,
                                 item['state']   , item['postal_code'] , 
                                 item['business_id'] ,
-                                lat=item['latitude'], lon=item['longitude'])
+                                lat=item['latitude'], lon=item['longitude'] )
     l_bucket.append( current_location )
     rest = Restaurant( 
                     item['business_id'], item['name']   , item['review_count'],
@@ -89,6 +89,7 @@ def read_csv_file ( file_folder    = "../dataset/" ,
     if file_name and file_folder:
         file_ = os.path.join( file_folder , file_name )
         data = pd.read_csv( file_ )
+        data['item_id'] = data.index
         if not save: return list (data["item_id"])
         data.dropna( axis = 1 , how = 'any' , inplace = True )
         data.drop( columns = drop_columns , axis = 1 , inplace=True)

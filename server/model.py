@@ -9,10 +9,12 @@ from marshmallow import Schema, fields, pprint
 
 ma = Marshmallow( app )
 
-import random , os ,string
+import random , os ,string , faker
 def random_generator( size=10 ,chars = string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size) )
 
+
+fake = faker.Faker()
 
 class Location(db.Model):
     __tablename__='location'
@@ -34,7 +36,7 @@ class Location(db.Model):
     business_id  = db.Column(db.String (22), db.ForeignKey('restaurant.business_id'))
     business = db.relationship('Restaurant',backref='Restaurant')
     def __init__(self ,address, city , post_code , phone_number , business_id ,
-        lat = None , lon=None):
+        lat = None , lon=None  ):
         self.address = address
         self.city = city
         self.post_code =post_code
@@ -43,6 +45,7 @@ class Location(db.Model):
         self.manager_name = random_generator()
         if lat : self.latitude = lat
         if lon : self.longtitude = lon
+        self.open_date = fake.date_between( start_date='-50y',end_date= 'now')
 
     def update ( self , args ): 
         for key , value in args.items():

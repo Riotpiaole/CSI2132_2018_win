@@ -7,7 +7,7 @@ from sqlalchemy import desc ,or_ ,asc
 from forms import RestySearchForm 
  
 import os 
-from model import *
+
 
 
 SECRET_KEY = os.urandom(24)
@@ -30,6 +30,7 @@ app.config.from_pyfile ( 'config.py' )
 app.config['SECRET_KEY']=SECRET_KEY
 db = SQLAlchemy( app ) # database object
 
+from model import *
 ######### Create Read Update Delete ###########################
 
 ######### RESTAURANT ######### 
