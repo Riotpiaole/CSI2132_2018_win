@@ -108,7 +108,7 @@ def newRestaurant():
         db.session.add( location )
         db.session.add(newRestaurant)
         db.session.commit()
-        return redirect(url_for('showRestaurants'))
+        return redirect(url_for('restaurants'))
     else:
         return render_template('newRestaurant.html')
 
@@ -120,7 +120,7 @@ def editRestaurant(business_id):
     if request.method == 'POST':
             if request.form['name']:
                 editedRestaurant.name = request.form['name']
-                return redirect(url_for('showRestaurants'))
+                return redirect(url_for('restaurants'))
     else:
             return render_template(
                 'editRestaurant.html', restaurant = editedRestaurant)
@@ -135,7 +135,7 @@ def deleteRestaurant(business_id):
         db.session.delete(restaurantToDelete)
         db.session.commit()
         return redirect(
-            url_for('showRestaurants', business_id=business_id))
+            url_for('restaurants'))
     else:
         return render_template(
             'deleteRestaurant.html', restaurant=restaurantToDelete)
@@ -174,10 +174,8 @@ def showMenu(business_id):
 def newMenuItem(business_id):
     if request.method == 'POST':
         newItem = MenuItem(name=request.form['name'], 
-            description=request.form['description'], price=request.form['price'], category=request.form['category'], business_id=business_id)
+            description=request.form['description'], price=request.form['price'], item_type=request.form['category'], business_id=business_id)
 
-        newItem = MenuItem(name=request.form['name'], description=request.form[
-                           'description'], price=request.form['price'], item_type=request.form['category'], business_id=business_id)
         db.session.add(newItem)
         db.session.commit()
 
@@ -351,15 +349,14 @@ def showRatings(business_id):
     print ( result )
     
     return render_template('ratings.html',ratings=result,total=avg )
-
-@app.route('/news/')
+@app.route('/restaurant/')
+@app.route('/restaurant/news/')
 def news():
     raterlist = db.session.execute( '''select rater.name, count(rating) as ratings
 from rater join rating on rater.user_id=rating.user_id 
 group by rater.name''' ).fetchall()
-    print (raterlist )
-    input()
 
+# restaurants
     restaurants = db.session().query( 
         Restaurant ,Rating , Location).\
     filter(
@@ -369,6 +366,7 @@ group by rater.name''' ).fetchall()
     .limit(5).all() 
     restaurant , rating , location = zip(*restaurants)
     
+    # raters
     raters = db.session().query( 
         Rater , func.min(Rating.mood) , 
         Location , Restaurant
@@ -388,6 +386,7 @@ group by rater.name''' ).fetchall()
         asc(Rating.mood) ,
         func.DATE(Rating.date)).limit(20).all()
     
+    # rest_spec
     rest_spec= raters[len(raters)-1][3]
     other_critics = db.session.query( 
         Restaurant,Rating.date , Rating.mood
@@ -406,4 +405,4 @@ group by rater.name''' ).fetchall()
                                          others=other_critics)
 
 if __name__ == "__main__":
-    app.run( port=5000,debug=True )
+    app.run( port=5555,debug=True )
