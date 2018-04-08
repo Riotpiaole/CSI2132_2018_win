@@ -1,9 +1,30 @@
 
+#cate_restaurant{
+  position: relative;
+  width: 80%;
+  left: 10%;
+  top:18%;
+  padding: 20px;
+  float: left;
+  text-align: center;
+}
+
+
+.catButtons{
+  font-size: 18px;
+  color:black;
+  border: black 1px solid;
+  padding: 10px 20px;
+  border-radius: 100px;
+  margin-top: 10px;
+  
+}
+
 #restaurantList{
   width: 80%; 
   left: 10%;
   position: absolute;
-  top: 30%;
+  top: 35%;
 }
 
 *{
@@ -36,10 +57,19 @@ body{
     border: black 1px solid;
     padding: 10px 20px;
     border-radius: 100px;
+    margin-top: 10px;
 }
 
 #buttons{
-  margin: 20px;
+  margin: 20px, 20px, 20px, 20px;
+  align-content: center;
+  
+  
+}
+
+.catButtons:hover{
+  background-color: black;
+  color: white;
 }
 
 .button:hover{
