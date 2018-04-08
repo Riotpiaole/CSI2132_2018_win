@@ -267,12 +267,14 @@ def showRaters():
 @app.route('/')
 @app.route('/raterlist/')
 def raterList():
-    raterlist = db.session.query(
-        Rater,
-        func.count(Rating)
-    ).group_by( 
-        Rater.user_id , Rating.user_id).limit(20).all()
-
+    raterlist = db.session.execute( 
+        '''
+        select rater.name,rater.join_date, count(rating) from rater join 
+        rating on rater.user_id = rating.user_id group by
+        rater.user_id 
+        '''
+    ).fetchall()
+    rater_list = [ list(rater) for rater in raterlist]
     return render_template('raterlist.html',raterlist=raterlist)
  
 # Create a new rater
@@ -405,4 +407,4 @@ group by rater.name''' ).fetchall()
                                          others=other_critics)
 
 if __name__ == "__main__":
-    app.run( port=5555,debug=True )
+    app.run( port=5000,debug=True )
