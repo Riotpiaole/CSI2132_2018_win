@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+
+    <body>
+        <div class="pane">
+            <h1>News</h1>
+            <h2>{{restaurant.name}} has not been rated in 2015.</h2>
+            <ul>
+                <li>Phone number: {{restaurant.phone}}</li>
+                <li>Type: {{restaurant.type}} </li>
+            </ul>
+
+            <h2>{{rater.name}} gave {{restaurant.name}}, opened on {{restaurant.open_date}}, the lowest rating.</h2>
+            <h3>Other ratings given by {{rater.name}}</h3>
+            {% for r in restaurants %}
+            <ul>
+                <li>{{rating.date}}:  {{restaurant.name}}, {{rating.mood}}</li>
+            </ul>
+            {% endfor %}
+
+            <h2> Sushi Bars won the highest rating among all type food!</h2>
+            {% for r in restaurants %}
+            <ul>
+                <li>{{r.name}}</li>
+                {% for rater in raters %}
+                <p>{{rater.name}}</p></br>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+                 
+            <h2>The average number of ratings among all type restaurants is {{avg}}</h2>
+                <p>Sushi bar has {{sushibar.total_ratings}} ratings</p>
+        </div>
+    </body>
+</html> 

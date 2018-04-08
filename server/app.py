@@ -312,15 +312,18 @@ def search():
     pass 
     
 #############  Ratings #########
+@app.route('/ratings/<string:business_id>/')
+@app.route('/ratings/<string:business_id>/ratings')
+def showRatings(business_id):
+    ratings=Rating.query.filter(Rating.business_id == business_id).limit(10)
+    
+    return render_template('ratings.html',ratings=ratings)
 
-@app.route('/ratings/')
-def showRatings():
-
-    return render_template('ratings.html',)
 
 
-
-
+@app.route('/news/')
+def news():
+    return render_template('news.html')
 
 if __name__ == "__main__":
     app.run( port=5000,debug=True )
