@@ -6,3 +6,4 @@ flask_restless
 flask_marshmallow
 marshmallow-sqlalchemy
 pandas
+wtforms
