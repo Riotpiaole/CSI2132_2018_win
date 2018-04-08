@@ -6,7 +6,17 @@
     <body>
         <div class="pane">
             <h1>Ratings of restaurants</h1>
-
+            <h2>Total Ratings: {{total}} </h2>
+            </br></br>
+            <h2>Samples</h2>
+            {% for r in ratings %}
+               <ul>
+                   <li>{{rater.name}}</li>
+                   <li>{{rating.date}}</li>
+                   <li>{{rating.comments}}</li>
+                   </br>
+               </ul>
+            {% endfor %}    
         </div>
     </body>
 </html> 

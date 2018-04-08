@@ -304,12 +304,15 @@ def deleteRater(user_id):
 @app.route('/ratings/<string:business_id>/')
 @app.route('/ratings/<string:business_id>/ratings')
 def showRatings(business_id):
-    ratings=db.session.query(Rating).filter_by(business_id).all()
+    ratings=Rating.query.filter(Rating.business_id == business_id).limit(10)
+    
     return render_template('ratings.html',ratings=ratings)
 
 
 
-
+@app.route('/news/')
+def news():
+    return render_template('news.html')
 
 if __name__ == "__main__":
     app.run( port=5000,debug=True )
