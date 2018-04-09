@@ -16,12 +16,9 @@
                 
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
-                      <div class="navbar-header">
-                        <a class="navbar-brand" href="index.html">Welcome</a>
-                      </div>
+                      
                       <ul class="nav navbar-nav">
                         <li class="active"><a href="{{url_for('restaurants')}}">Home</a></li>
-                        <li><a href="Search.html">Search</a></li>
                         <li><a href="{{url_for('register')}}">Register</a></li>
                         <li><a href="{{url_for('raterList')}}">Raters</a></li>
                       </ul>
@@ -29,24 +26,31 @@
                 </nav>
         </head>
 
-<body>
-
-<h1> Edit Restaurant </h1>
 
 
-<form action="{{ url_for('editRestaurant',business_id = restaurant.business_id)}}" method = 'post'>
+<body style='background-image:url(..\static\img\uottawa.jpg);   background-color:rgb(48, 58, 66);
+color:#ddd; text-align: center;'>
+
+<h1 style="text-align: center;"> Edit Restaurant </h1>
 
 
-	<p>Name:</p>
-		<input type ='text' size='30' name='name' placeholder = '{{restaurant.name }}'>
+<div style="width: 80%; left: 10% ; position: absolute; top: 40%;">
+  <form action="{{ url_for('editRestaurant',business_id = restaurant.business_id)}}" method = 'post'>
 
 
-<input type='submit' value='Edit'>
+    <p style="font-family: serif; font-size: 30px; font-weight: bold;">New Name:</p>
+    <input type ='text' size='30' name='name' placeholder = '{{restaurant.name }}' style="width: 60%; height: 50px;">
 
+    <div class="clearfix" style="margin-top: 20px;">
+        <button type="button" class="cancelbtn" style="background-color: red; color: black; font-weight: bold; width: 45%;">Cancel</button>
+        <button type="submit" class="signupbtn" style="background-color: rgb(15, 117, 40); color: black; font-weight: bold; width: 45%;">Submit</button>
+      </div>
 
-<a href = '{{url_for('restaurants')}}'> Cancel </a>
+    <a href = '{{url_for('restaurants')}}'> Cancel </a>
 
-</form>
+  </form>
+
+</div>
 </body>
 
 </html>

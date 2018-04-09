@@ -15,12 +15,9 @@
                 
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
-                      <div class="navbar-header">
-                        <a class="navbar-brand" href="index.html">Welcome</a>
-                      </div>
+                      
                       <ul class="nav navbar-nav">
                         <li class="active"><a href="{{url_for('restaurants')}}">Home</a></li>
-                        <li><a href="Search.html">Search</a></li>
                         <li><a href="{{url_for('register')}}">Register</a></li>
                         <li><a href="{{url_for('raterList')}}">Raters</a></li>
                       </ul>
@@ -33,16 +30,17 @@
             <h1 class="title" style="font-size: 100">Raters</h1>
 
 
-            <div>
+            <div id="restaurantList">
                 {% for rater in raterlist %}
                 
                         <div id="listbox">
                             <p style="color: black; font-size: 35px; text-align: center;">   {{rater[0]}} </p>
-                            <p>{{rater[2]}} ratings</p>
-                            <p>Join date: {{rater[1]}}</p>
+                            
                         <div id="buttons" style="text-align: center;">
                             <a class="button" href = "{{url_for('editRater',user_id = rater.user_id)}}">Edit Rater</a>
                             <a class="button" href = "{{url_for('deleteRater',user_id = rater.user_id)}}">Delete Rater</a>
+                            <a class="button" > {{rater[2]}} ratings </a>
+                            <a class="button"> Join date: {{rater[1]}} </a>
                         </div>
                     </div>
                 {% endfor %}

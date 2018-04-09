@@ -18,12 +18,9 @@
                 
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
-                      <div class="navbar-header">
-                        <a class="navbar-brand" href="index.html">Welcome</a>
-                      </div>
+                      
                       <ul class="nav navbar-nav">
                         <li class="active"><a href="{{url_for('restaurants')}}">Home</a></li>
-                        <li><a href="Search.html">Search</a></li>
                         <li><a href="{{url_for('register')}}">Register</a></li>
                         <li><a href="{{url_for('raterList')}}">Raters</a></li>
                       </ul>
@@ -31,12 +28,20 @@
                 </nav>
         </head>
 	<body>
+			<div class="pimg1 parallax-img parallax-landing" style='background-image:url(../static/img/projects-landing.jpg)'>
 	
-		<div class = 'pane'>
-		<h1>Menu</h1>
+		<div class = 'pimg1 parallax-img parallax-landing' style='background-image:url(../static/img/projects-landing.jpg) '>
+			<div class="ptext">
+			<span	>Menu</span>
+			</div>
+		</div>
+		
+
+		<div class="parallax-section parallax-img section-dark" style="background-color:#122F4B;
+		color:#ddd; min-height:400px;">
 			<h2>Manager: </h2>
 				
-			<h2>Open Hours: </h2>
+			<h2 >Open Hours: </h2>
 				<ul>
 					<li>Monday: {{restaurant.hours[0]}}</li>
 					<li>Tuesday: {{restaurant.hours[1]}}</li>
@@ -45,6 +50,10 @@
 					<li>Friday: {{restaurant.hours[4]}}</li>
 				</ul>
 		
+		</div>
+
+		<div class="parallax-section parallax-img" style="  background-color:#f4f4f4;
+		color:#666; min-height:400px;">
 			<h2>Location: </h2>
 				{% for i in location %}
 				<ul>
@@ -57,42 +66,50 @@
 					
 			<a class="button" href = "{{url_for('showRatings',business_id = business_id)}}">Ratings of this restaurant</a>		
 					</br></br>
-    {% if items !=[] %}
+    		{% if items !=[] %}
 
-		<a href = "{{url_for('newMenuItem', business_id = business_id )}}">Create New Item</a>
-	</br></br>
-
-	<h2>MOST Expensive</h2>
-		<p>{{exp.name}}</p>
-		<p>Priced {{exp.price}} CAD</p>
-	<br/>
-	<h2>Appetizers</h2>
-
-		{% for i in items %}
-		{% if i.category == 'Appetizers' %}
-
-		<p>{{i.name}}</p>
-		<P>Average</P>
-		<p>{{avg['Appetizers']}} CAD</p>
-
-		<p>{{i.description}}</p>
-	
-
-		<p>{{i.price}} CAD</p>
-	
-		<a href='{{url_for('editMenuItem', business_id = business_id, item_id=i.item_id ) }}' >Edit</a>
-	</br>
-	<a href='{{url_for('deleteMenuItem', business_id = business_id, item_id=i.item_id ) }}' >Delete</a>
-</br>
-</br>
-		{% endif %}
-
-		{% endfor %}
+			<a href = "{{url_for('newMenuItem', business_id = business_id )}}">Create New Item</a>
+			</br>
 
 		
 
-		</br></br>
 
+
+		
+			</br>
+			<h2>MOST Expensive</h2>
+				<p>{{exp.name}}</p>
+				<p>Priced {{exp.price}} CAD</p>
+			<br/>
+			<h2>Appetizers</h2>
+
+				{% for i in items %}
+				{% if i.category == 'Appetizers' %}
+
+				<p>{{i.name}}</p>
+				<P>Average</P>
+				<p>{{avg['Appetizers']}} CAD</p>
+
+				<p>{{i.description}}</p>
+			
+
+				<p>{{i.price}} CAD</p>
+			
+				<a href='{{url_for('editMenuItem', business_id = business_id, item_id=i.item_id ) }}' >Edit</a>
+			</br>
+			<a href='{{url_for('deleteMenuItem', business_id = business_id, item_id=i.item_id ) }}' >Delete</a>
+		</br>
+		</br>
+		{% endif %}
+
+		{% endfor %}
+	</div>
+		
+
+		
+
+		<div class="parallax-section parallax-img" style="background-color:#122F4B;
+		color:#ddd; min-height:400px;">
 	<h2>Entrees</h2>
 
 		{% for i in items %}
@@ -118,7 +135,15 @@
 		
 		
 
-		</br></br>
+		</br>
+	
+	
+	</br>
+
+</div>
+
+<div class="parallax-section parallax-img" style="  background-color:#f4f4f4;
+color:#666; min-height:400px;">
 
 	<h2>Desserts</h2>
 
@@ -173,9 +198,13 @@
 		
 
 		{% else %}
-		<p> You currently have no menu items. <p>
+		<p> You currently have no menu items. </p>
 		<a href = "{{url_for('newMenuItem', business_id = business_id )}}">Create New Item</a>
 			{% endif %}
+
+</div>
+
+</div>
 </div>
 	</body>
 
