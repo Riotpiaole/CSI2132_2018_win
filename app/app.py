@@ -276,17 +276,18 @@ def showRaters():
     
 
 # CRUD for raters
-@app.route('/')
+
 @app.route('/raterlist/')
 def raterList():
     raterlist = db.session.execute( 
         '''
-        select rater.name,rater.join_date, count(rating) from rater join 
+        select rater.name,rater.join_date, count(rating) , rater.user_id from rater join 
         rating on rater.user_id = rating.user_id group by
         rater.user_id 
         '''
     ).fetchall()
     rater_list = [ list(rater) for rater in raterlist]
+    print( rater_list)
     return render_template('raterlist.html',raterlist=raterlist)
  
 # Create a new rater
@@ -320,18 +321,20 @@ def editRater(user_id):
                 'editRater.html',e_rater=e_rater, user_id=e_rater.user_id)
 
 # Delete a rater
-@app.route('/raterlist/<string:user_id>/delete/', methods=['GET', 'POST'])
+@app.route('/raterlist/<string:user_id>/delete', methods=['GET', 'POST'])
 def deleteRater(user_id):
     d_rater = db.session.query(
-        Rater).filter_by(user_id=user_id).one()
+        Rater).filter_by(user_id=user_id)
+    print ( "Run")
     if request.method == 'POST':
         db.session.delete(d_rater)
         db.session.commit()
+        print ( "Run")
         return redirect(
             url_for('raterList'))
     else:
         return render_template(
-            'deleteRater.html',d_rater=d_rater, user_id=d_rater.user_id)
+            'deleteRater.html',rater=d_rater)
 
     
 
@@ -430,4 +433,4 @@ group by rater.name''' ).fetchall()
                                          others=other_critics)
 
 if __name__ == "__main__":
-    app.run( port=5000,debug=True )
+    app.run( port=5634,debug=True )
