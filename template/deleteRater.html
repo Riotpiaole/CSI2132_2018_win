@@ -28,7 +28,7 @@
         </head>
 
 <body>
-<h1> Are you sure you want to delete {{d_rater.name}}? </h1>
+<h1> Are you sure you want to delete {{rater.name}}? </h1>
 
 <form action="#" method = 'post'>
 
@@ -39,7 +39,7 @@
 
 </form>
 
-<a href = '#'> Cancel </a>
+<a href = '{{url_for('raterList')}}'> Cancel </a>
 </body>
 
 </html>

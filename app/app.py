@@ -5,11 +5,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func 
 from sqlalchemy import desc ,or_ ,asc
 from forms import RestySearchForm 
- 
+from random import randint
 import os 
 from model import *
 
-
+gen_int = lambda x : randint ( 0 , x - 1)
 SECRET_KEY = os.urandom(24)
 
 map_role =  dict([('0' , "Staff"), ('1',"Blogger") , ('2' ,"Food Critics")])
@@ -221,16 +221,27 @@ def deleteMenuItem(business_id, item_id):
 @app.route('/restaurant/<string:business_id>/rater_staff/')
 def staff_poor_review( business_id ):
     # TODO not testing 
-    result =  db.session.execute(''' select rater.name , location.first_open_date , rating.mood from rater join 
-( location join rating on location.business_id = rating.business_id)
-on rating.user_id = rater.user_id where rater.rater_type = '0' 
-group by rater.name ,location.first_open_date , rating.mood
-having rating.mood <= avg( rating.mood)''' ).fetchall()
+    result =  db.session.execute('''
+    select rater.name , location.first_open_date , rating.mood from rater join 
+    ( location join rating on location.business_id = rating.business_id)
+    on rating.user_id = rater.user_id where rater.rater_type = '0' 
+    group by rater.name ,location.first_open_date , rating.mood
+    having rating.mood <= avg( rating.mood)''' ).fetchall()
     return render_template('')
 
 @app.route('/restaurant/best/<string:catergory>/')
 def best_catergory(catergory ):
     # TODO not testing 
+    Best_cate = db.session.execute('''
+    select rating,food_cate.cate_type from rating join ( 
+	select unnest(restaurant.food_type) as cate_type, restaurant.business_id as b_id
+	from restaurant
+    ) as food_cate on rating.business_id = food_cate.b_id 
+    where food_cate.cate_type='{}' 
+    group by ( food_cate.cate_type , rating.mood , rating.* )
+    having ( rating.mood >= avg(rating.mood) )
+    order by rating.mood desc
+    '''.format( catergory )).fetchall()
     pass 
 
 #############  Raters #########
@@ -265,17 +276,18 @@ def showRaters():
     
 
 # CRUD for raters
-@app.route('/')
+
 @app.route('/raterlist/')
 def raterList():
     raterlist = db.session.execute( 
         '''
-        select rater.name,rater.join_date, count(rating) from rater join 
+        select rater.name,rater.join_date, count(rating) , rater.user_id from rater join 
         rating on rater.user_id = rating.user_id group by
         rater.user_id 
         '''
     ).fetchall()
     rater_list = [ list(rater) for rater in raterlist]
+    print( rater_list)
     return render_template('raterlist.html',raterlist=raterlist)
  
 # Create a new rater
@@ -284,9 +296,9 @@ def newRater():
     if request.method == 'POST':
         newRater = Rater(name=request.form['name'],
                         join_date=request.form['join_date'],
-                        user_id='00',
-                        reputation='0',
-                        rater_type='0'
+                        user_id=random_generator(),
+                        reputation= gen_int(5),
+                        rater_type=str( gen_int(3))
                         )
         db.session.add(newRater)
         db.session.commit()
@@ -309,18 +321,20 @@ def editRater(user_id):
                 'editRater.html',e_rater=e_rater, user_id=e_rater.user_id)
 
 # Delete a rater
-@app.route('/raterlist/<string:user_id>/delete/', methods=['GET', 'POST'])
+@app.route('/raterlist/<string:user_id>/delete', methods=['GET', 'POST'])
 def deleteRater(user_id):
     d_rater = db.session.query(
-        Rater).filter_by(user_id=user_id).one()
+        Rater).filter_by(user_id=user_id)
+    print ( "Run")
     if request.method == 'POST':
         db.session.delete(d_rater)
         db.session.commit()
+        print ( "Run")
         return redirect(
             url_for('raterList'))
     else:
         return render_template(
-            'deleteRater.html',d_rater=d_rater, user_id=d_rater.user_id)
+            'deleteRater.html',rater=d_rater)
 
     
 
@@ -401,16 +415,22 @@ group by rater.name''' ).fetchall()
         Rating.date
     ).order_by( Rating.date ).limit(10).all()
 
-    Itialian = db.session.execute('''
-        select restaurant.food_type from restaurant 
-        where restaurant.food_type @> ARRAY['{}']::varchar[]
-    '''.format( "French")).fetchall()
-   
-    
+    Best_cate = db.session.execute('''
+        select rating,food_cate.cate_type from rating join ( 
+        select unnest(restaurant.food_type) as cate_type, restaurant.business_id as b_id
+        from restaurant
+        ) as food_cate on rating.business_id = food_cate.b_id 
+        where food_cate.cate_type='{}' 
+        group by ( food_cate.cate_type , rating.mood , rating.* )
+        having ( rating.mood >= avg(rating.mood) )
+        order by rating.mood desc
+    '''.format( "Active Life")).fetchall()
+    os.system("clear")
+
     return render_template('news.html' , restaurant=restaurant[0], 
                                          location = location[0] , 
                                          johns=raters[0],
                                          others=other_critics)
 
 if __name__ == "__main__":
-    app.run( port=5000,debug=True )
+    app.run( port=5634,debug=True )
