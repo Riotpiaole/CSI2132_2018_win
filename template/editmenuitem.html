@@ -11,16 +11,14 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
               
                 <title>Edit Item</title>
-                <link rel="stylesheet" href="../static/style1.css">
+                <link rel="stylesheet" href="../../../../static/style1.css">
                 
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
-                      <div class="navbar-header">
-                        <a class="navbar-brand" href="index.html">Welcome</a>
-                      </div>
+                     
                       <ul class="nav navbar-nav">
                         <li class="active"><a href="{{url_for('restaurants')}}">Home</a></li>
-                        <li><a href="Search.html">Search</a></li>
+                        
                         <li><a href="{{url_for('register')}}">Register</a></li>
                         <li><a href="{{url_for('raterList')}}">Raters</a></li>
                       </ul>
@@ -28,17 +26,28 @@
                 </nav>
         </head>
 
-<body><h1> Edit Menu Item </h1>
+        <body class="parallax-body pimg1 parallax-img parallax-landing" style='background-image:url(../../../../static/img/education-landing.jpeg)'>
+  <h1> Edit Menu Item </h1>
 
-<form action="#" method = 'post'>
+
+  <div class = "registration">
+<form style="font-size: 20px; line-height: 2em; text-align: center ;" action="#" method = 'post'>
 
 
+  <div>
 	<p>Name:</p>
-		<input type ='text' size='30' name='name' placeholder = '{{item.name }}'>
+    <input type ='text' size='30' name='name' placeholder = '{{item.name }}'>
+    </div>
+    <div>
 	<p>Description:</p>
-		<input type ='text' size='30' name='description' placeholder = '{{item.description}}'>
+    <input type ='text' size='30' name='description' placeholder = '{{item.description}}'>
+    </div>
+    <div>
 	<p>Price:</p>
-		<input type ='text' size='30' name='price' placeholder = '{{item.price}}'>
+    <input type ='text' size='30' name='price' placeholder = '{{item.price}}'>
+    </div>
+
+    <div>
 	<p>Course:<p>
 
 	{% if item.category == 'Appetizer' %}
@@ -68,15 +77,16 @@
 	{% else %}
 		<dd><input type ='radio' name='course' value='Beverage'>Beverage</dd>
 	{% endif %}
+  </div>
 
+<br>
+<input class="bigbutton" type='submit' value='Edit'>
 
-
-<input type='submit' value='Edit'>
-
-
-<a href = '{{url_for('showMenu', business_id=business_id)}}'> Cancel </a>
+<br>
+<a class="button" style="line-height: 3em" href = '{{url_for('showMenu', business_id=business_id)}}'> Cancel </a>
 
 
 </form>
+</div>
 </body>
 </html>
