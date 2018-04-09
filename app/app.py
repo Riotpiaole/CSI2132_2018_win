@@ -423,8 +423,7 @@ group by rater.name''' ).fetchall()
         order by rating.mood desc
     '''.format( "Active Life")).fetchall()
     os.system("clear")
-    print ( Best_cate )
-    input()
+
     return render_template('news.html' , restaurant=restaurant[0], 
                                          location = location[0] , 
                                          johns=raters[0],
