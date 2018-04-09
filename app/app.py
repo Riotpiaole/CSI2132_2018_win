@@ -50,25 +50,6 @@ def restaurants():
     
     # search bar
     form = RestySearchForm(request.form)
-    if request.method == 'POST':
-        # name = request.form[ 'name' ]
-        flash('All the form fields are required. ')
-        results = []
-        name=request.form['name']
-        # search_string = search.data [ 'search' ]
-        print ("The query string ", name )
-        # results = db.session.query( 
-        #     Restaurant 
-        # ).filter( 
-        #     or_( *[name.like( search_string ) 
-        #             for name in Restaurant.food_type ])
-        # ).all()
-
-
-        # return render_template('restaurants.html', restaurants = restaurants ,
-        #                                        categories=filters[:10],
-        #                                        form = form,
-        #                                        cated=False)
 
     return render_template('restaurants.html', restaurants = restaurants ,
                                                categories=filters[:5],
@@ -145,7 +126,7 @@ def deleteRestaurant(business_id):
 ############# MenuItem #########
 # Show Menu
 @app.route('/restaurant/<string:business_id>')
-@app.route('/restaurant/<string:business_id>/menu')
+@app.route('/restaurant/<string:business_id>/menu', methods=['GET','POST'])
 def showMenu(business_id):
     location = Location.query.filter( Location.business_id == business_id ).all()
     restaurant = Restaurant.query.filter( Restaurant.business_id == business_id ).first()
@@ -277,7 +258,7 @@ def showRaters():
 
 # CRUD for raters
 
-@app.route('/raterlist/')
+@app.route('/raterlist/' , methods=['GET','POST'])
 def raterList():
     raterlist = db.session.execute( 
         '''
@@ -287,7 +268,6 @@ def raterList():
         '''
     ).fetchall()
     rater_list = [ list(rater) for rater in raterlist]
-    print( rater_list)
     return render_template('raterlist.html',raterlist=raterlist)
  
 # Create a new rater
@@ -325,11 +305,10 @@ def editRater(user_id):
 def deleteRater(user_id):
     d_rater = db.session.query(
         Rater).filter_by(user_id=user_id)
-    print ( "Run")
+    
     if request.method == 'POST':
         db.session.delete(d_rater)
         db.session.commit()
-        print ( "Run")
         return redirect(
             url_for('raterList'))
     else:
@@ -345,12 +324,11 @@ def search():
 #############  Ratings #########
 @app.route('/ratings/<string:business_id>/')
 @app.route('/ratings/<string:business_id>/ratings')
-def showRatings(business_id):
+def showRatings(business_id): 
     avg = format (float ( db.session.query( 
         func.avg(Rating.mood) ,  Rating.business_id
     ).filter( business_id == Rating.business_id ).group_by(
         Rating.business_id).first()[0]),".2f")
-
     
     result = db.session.query( 
         Rater  , Rating ).\
@@ -362,8 +340,7 @@ def showRatings(business_id):
          Rating.comments,
         Rating.business_id).limit(20).all()
     result = [ list( x ) for x in  result  ]
-    
-    print ( result )
+
     
     return render_template('ratings.html',ratings=result,total=avg )
 @app.route('/restaurant/')
