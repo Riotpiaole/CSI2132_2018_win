@@ -39,7 +39,7 @@
                 {% endif %}
             </div>
             
-         <h1 class="title" style="font-size: 100">Restaurants</h1>
+         <h1 class="ptext" style="font-size: 100; top: 10%">Reater</h1>
             <div id="restaurantList">
                 {% for restaurant in restaurants %}
                         <div id="listbox">
@@ -52,9 +52,9 @@
                         </div>
                     </div>
                 {% endfor %}
-                <a id="listbox" class="button" style="background-color:#09d80c; opacity: 1; font-size: 35px;" href="{{url_for('newRestaurant')}}" > <h3 style="text-align: center"> Create a New Restaurant </h3> </a>
-                <a id="listbox" class="button" style="background-color:#09d80c; opacity: 1; font-size: 35px;" href="{{url_for('news')}}" > <h3 style="text-align: center"> Rating of Restaurants </h3> </a>
-                <a id="listbox" class="button" style="background-color:#09d80c; opacity: 1; font-size: 35px;" href="{{url_for('showRaters')}}" > <h3 style="text-align: center"> Raters and Their Ratings </h3> </a>
+                <a id="listbox" class="button" style="background-color:#09d80c ; font-size: 35px;" href="{{url_for('newRestaurant')}}" > <h3 class="boxcenter" > Create a New Restaurant </h3> </a>
+                <a id="listbox" class="button" style="background-color:#09d80c; font-size: 35px;" href="{{url_for('news')}}" > <h3 class="boxcenter "> Rating of Restaurants </h3> </a>
+                <a id="listbox" class="button" style="background-color:#09d80c; font-size: 35px;" href="{{url_for('showRaters')}}" > <h3 class="boxcenter "> Raters and Their Ratings </h3> </a>
                
             </div>
         

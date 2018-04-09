@@ -1,4 +1,4 @@
-<html>
+    <html>
         <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,18 +42,14 @@
             <h2>John gave {{johns[3].name}}, opened on {{johns[2].first_open_date}}, the lowest rating.</h2>
             <h3>Other ratings given by Staff Peter</h3>
             {% for other in others %}
-                <ul>
-                    <li>{{other[2]}}:  {{other[0].name}}, {{other[2]}}</li>
-                </ul>
+                <h4>
+                    <li>Rating: {{other[2]}} || Name:  {{other[0].name}}</li>
+                </h4>
             {% endfor %}
 
-<<<<<<< HEAD
             <h2> Sushi Bars won the highest rating among all type food!</h2>
             </div>
                 
-=======
-            <h2> Active Life won the highest rating among all type food!</h2>
->>>>>>> 96318308a259afe3495773cd86cab5e7ec889da5
         </div>
     </body>
 </html> 

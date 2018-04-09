@@ -29,6 +29,12 @@ font-weight: 800;
 line-height: 2em;
 }
 
+
+.boxcenter{
+  text-align: center;
+  font-size: 40px;
+}
+
 #landing{
   background-image:url('../img/landing.jpeg');
   height: 100vh;
