@@ -12,7 +12,7 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
               
                 <title>Edit Restaurant</title>
-                <link rel="stylesheet" href="../static/style1.css">
+                <link rel="stylesheet" href="../../../../static/style1.css">
                 
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
@@ -28,10 +28,11 @@
 
 
 
-<body style='background-image:url(..\static\img\uottawa.jpg);   background-color:rgb(48, 58, 66);
+<body class="parallax-img parallax-body pimg1 parallax-landing" style='background-image:url(../../../../static/img/uottawa.jpg);   background-color:rgb(48, 58, 66);
 color:#ddd; text-align: center;'>
 
-<h1 style="text-align: center;"> Edit Restaurant </h1>
+<div class="ptext" style="top:30%;" ><h1> Edit Restaurant </h1></div>
+
 
 
 <div style="width: 80%; left: 10% ; position: absolute; top: 40%;">
@@ -42,8 +43,8 @@ color:#ddd; text-align: center;'>
     <input type ='text' size='30' name='name' placeholder = '{{restaurant.name }}' style="width: 60%; height: 50px;">
 
     <div class="clearfix" style="margin-top: 20px;">
-        <button type="button" class="cancelbtn" style="background-color: red; color: black; font-weight: bold; width: 45%;">Cancel</button>
-        <button type="submit" class="signupbtn" style="background-color: rgb(15, 117, 40); color: black; font-weight: bold; width: 45%;">Submit</button>
+        <button class="bigbutton" type="button" class="cancelbtn" style="background-color: red">Cancel</button>
+        <button class="bigbutton" type="submit" class="signupbtn" >Submit</button>
       </div>
 
     <a href = '{{url_for('restaurants')}}'> Cancel </a>

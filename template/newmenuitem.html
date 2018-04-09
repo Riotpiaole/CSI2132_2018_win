@@ -11,7 +11,7 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
               
                 <title>Create new item</title>
-                <link rel="stylesheet" href="../static/style1.css">
+                <link rel="stylesheet" href="../../../../static/style1.css">
                 
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
@@ -25,30 +25,36 @@
                     </div>
                 </nav>
         </head>
-<body>
-
-<h1>New Menu Item</h1>
-
-<form action="#" method = 'post'>
+        <body class="parallax-body pimg1 parallax-img parallax-landing" style='background-image:url(../../../../static/img/personal_web_img.jpeg)'>
+<div class="ptext" style="top:20%"><h1>New Menu Item</h1></div>
 
 
-	<p>Name:</p>
-		<input type ='text' size='30' name='name'>
-	<p>Description:</p>
-		<input type ='text' size='30' name='description'>
-	<p>Price:</p>
-		<input type ='text' size='30' name='price'>
-	<p>category:</p>
-		<input type ='radio'  name='category' value ='Appetizer'>Appetizer</br>
-		<input type ='radio'  name='category' value ='Entree'>Entree</br>
-		<input type ='radio' name='category' value ='Dessert'>Dessert</br>
-		<input type ='radio'  name='category' value ='Beverage'>Beverage</br>
-	</br>
+<div class = "registration">
+<form action="#" method = 'post' style="font-size: 20px; line-height: 2em">
 
-
-<input type='submit' value='Create'>
+<div><p>Name:</p>
+  <input type ='text' size='30' name='name'></div>
+  
+  <div><p>Description:</p>
+		<input type ='text' size='30' name='description'></div>
+	
+  
+  <div><p>Price:</p>
+		<input type ='text' size='30' name='price'></div>
+    
+  
+  <div >
+      <p>Category:</p>
+      <input type ='radio'  name='category' value ='Appetizer'>Appetizer</br>
+      <input type ='radio'  name='category' value ='Entree'>Entree</br>
+      <input type ='radio' name='category' value ='Dessert'>Dessert</br>
+      <input type ='radio'  name='category' value ='Beverage'>Beverage</br>
+    </br>
+  </div>
+  
+<input type='submit' value='Create' style="background-color: rgb(15, 117, 40); color: black; font-weight: bold; width: 45%;">
 
 </form>
-
+</div>
 </body>
 </html>

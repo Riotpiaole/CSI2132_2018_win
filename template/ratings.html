@@ -10,7 +10,7 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
               
                 <title>Ratings</title>
-                <link rel="stylesheet" href="../static/style1.css">
+                <link rel="stylesheet" href="../../static/style1.css">
                 
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
@@ -26,20 +26,22 @@
         </head>
 
     <body>
-        <div class="pane">
-            <h1>Ratings of restaurants</h1>
-            <h2>Total Ratings: {{total}} </h2>
-            </br></br>
-            <h2>Samples</h2>
+        <div class="pane section-light">
+            <div class="ptext" style="top: 10%">
+            <h1>Ratings</h1>
+            <h2>Average Rating: {{total}} </h2>
+            </div>
+            
+            
+            <div class="largeData">
             {% for rating in ratings %}
-               <ul>
-                    <li>{{rating[0].name}}</li>
-                    <li>Rating {{rating[1].mood}}</li>
-                   <li>{{rating[1].date}}</li>
-                   <li>{{rating[1].comments}}</li>
-                   </br>
-               </ul>
-            {% endfor %}    
+                <h3>Name : {{rating[0].name}}</h3>
+                <h4>Rating {{rating[1].mood}}</h4>
+                <h5>{{rating[1].date}}</h5>
+                <h5>{{rating[1].comments}}</h5>
+                </br>
+            {% endfor %} 
+            </div>   
         </div>
     </body>
 </html> 
